@@ -29,3 +29,6 @@ ml/
 # Build
 client/dist/
 client/build/
+
+# Uploads
+server/uploads/
