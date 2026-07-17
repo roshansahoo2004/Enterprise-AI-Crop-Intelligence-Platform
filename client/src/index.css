@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Base Styles ──────────────────────────────────────────────────────── */
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-surface-950 text-gray-100 font-sans antialiased;
+    min-height: 100vh;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-surface-900;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-surface-600 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-surface-500;
+  }
+
+  ::selection {
+    @apply bg-primary-500/30 text-primary-100;
+  }
+}
+
+/* ─── Component Styles ─────────────────────────────────────────────────── */
+@layer components {
+  /* Glassmorphism card */
+  .glass-card {
+    @apply bg-white/[0.05] backdrop-blur-xl border border-white/[0.08] rounded-2xl;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300;
+  }
+
+  .glass-card-hover:hover {
+    @apply bg-white/[0.08] border-white/[0.12] -translate-y-1;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(16, 185, 129, 0.08);
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-400 to-primary-300;
+  }
+
+  .gradient-text-warm {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-secondary-400 to-secondary-300;
+  }
+
+  /* Primary button */
+  .btn-primary {
+    @apply px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-500 text-white font-semibold 
+           rounded-xl shadow-lg shadow-primary-500/25 transition-all duration-300 
+           hover:shadow-xl hover:shadow-primary-500/30 hover:-translate-y-0.5
+           active:translate-y-0 active:shadow-md
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 bg-white/[0.08] text-gray-200 font-semibold rounded-xl border border-white/[0.1]
+           transition-all duration-300 hover:bg-white/[0.12] hover:border-white/[0.2]
+           active:bg-white/[0.06];
+  }
+
+  /* Input field */
+  .input-field {
+    @apply w-full px-4 py-3 bg-white/[0.06] border border-white/[0.1] rounded-xl
+           text-gray-100 placeholder-gray-500 outline-none
+           transition-all duration-300
+           focus:border-primary-500/50 focus:bg-white/[0.08]
+           focus:ring-2 focus:ring-primary-500/20;
+  }
+
+  /* Status indicators */
+  .status-optimal {
+    @apply text-primary-400 bg-primary-400/10 border-primary-400/20;
+  }
+
+  .status-low {
+    @apply text-blue-400 bg-blue-400/10 border-blue-400/20;
+  }
+
+  .status-high {
+    @apply text-secondary-400 bg-secondary-400/10 border-secondary-400/20;
+  }
+
+  .status-critical {
+    @apply text-red-400 bg-red-400/10 border-red-400/20;
+  }
+
+  /* Animated background mesh */
+  .bg-mesh {
+    background: 
+      radial-gradient(at 80% 20%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
+      radial-gradient(at 20% 80%, rgba(5, 150, 105, 0.06) 0px, transparent 50%),
+      radial-gradient(at 50% 50%, rgba(245, 158, 11, 0.04) 0px, transparent 50%),
+      #020617;
+  }
+
+  /* Pulse dot */
+  .pulse-dot {
+    @apply relative;
+  }
+
+  .pulse-dot::before {
+    content: '';
+    @apply absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-primary-400 rounded-full animate-pulse;
+  }
+
+  /* Shimmer loading */
+  .shimmer {
+    background: linear-gradient(90deg, 
+      rgba(255,255,255,0) 0%, 
+      rgba(255,255,255,0.05) 50%, 
+      rgba(255,255,255,0) 100%);
+    background-size: 200% 100%;
+    @apply animate-shimmer;
+  }
+
+  /* Gauge / meter styling */
+  .confidence-gauge {
+    @apply relative w-32 h-32;
+  }
+}
+
+/* ─── Utility Styles ───────────────────────────────────────────────────── */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .mask-gradient {
+    mask-image: linear-gradient(to bottom, black 60%, transparent);
+  }
+}

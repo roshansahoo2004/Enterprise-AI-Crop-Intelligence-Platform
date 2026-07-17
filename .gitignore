@@ -1,0 +1,31 @@
+# Dependencies
+client/node_modules/
+server/node_modules/
+
+# Environment
+.env
+.env.*
+
+# Logs
+*.log
+
+# Python
+__pycache__/
+*.pyc
+
+# ML Models
+*.h5
+*.keras
+*.pth
+*.pt
+*.pkl
+*.joblib
+
+# Dataset
+dataset/
+deep-learning/
+ml/
+
+# Build
+client/dist/
+client/build/
