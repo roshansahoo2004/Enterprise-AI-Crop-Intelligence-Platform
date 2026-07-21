@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { NavLink, useLocation } from 'react-router-dom';
-import { FiHome, FiCrosshair, FiClock, FiPieChart, FiSettings, FiX, FiShield, FiCpu, FiDatabase, FiTrendingUp, FiZap, FiSearch, FiChevronDown, FiBarChart2, FiFileText } from 'react-icons/fi';
+import { FiHome, FiCrosshair, FiClock, FiPieChart, FiSettings, FiX, FiShield, FiCpu, FiDatabase, FiTrendingUp, FiZap, FiSearch, FiChevronDown, FiBarChart2, FiFileText, FiHeart } from 'react-icons/fi';
 
 const Sidebar = ({ isOpen, closeSidebar }) => {
   const { user } = useAuth();
@@ -36,6 +36,12 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
           name: 'Model Performance',
           path: '/admin/model-performance',
           icon: <FiTrendingUp className="h-5 w-5" />
+        },
+        // ─── Phase-10 Step-1: Model Health Dashboard ───
+        {
+          name: 'Model Health',
+          path: '/admin/model-health',
+          icon: <FiHeart className="h-5 w-5" />
         },
         // ─── Phase-9 Step-4: Explainability submenu placeholder (rendered separately) ───
         {

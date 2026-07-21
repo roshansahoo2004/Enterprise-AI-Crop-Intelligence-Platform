@@ -38,6 +38,9 @@ import ExplainabilityDetail from './pages/ExplainabilityDetail';
 // ─── Phase-9 Step-4: Explainability Reporting & Export Center ───
 import ExplainabilityReports from './pages/ExplainabilityReports';
 
+// ─── Phase-10 Step-1: Enterprise Model Health Dashboard ───
+import ModelHealthDashboard from './pages/ModelHealthDashboard';
+
 const App = () => {
   const { isAuthenticated } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -234,6 +237,20 @@ const App = () => {
               <AdminOnly>
                 <AuthenticatedLayout>
                   <ExplainabilityReports />
+                </AuthenticatedLayout>
+              </AdminOnly>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Phase-10 Step-1: Enterprise Model Health Dashboard */}
+        <Route
+          path="/admin/model-health"
+          element={
+            <ProtectedRoute>
+              <AdminOnly>
+                <AuthenticatedLayout>
+                  <ModelHealthDashboard />
                 </AuthenticatedLayout>
               </AdminOnly>
             </ProtectedRoute>
