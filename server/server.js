@@ -40,6 +40,36 @@ const explainabilityReportRoutes = require('./routes/explainabilityReport');
 // ─── Phase-10 Step-1: Enterprise Model Health Dashboard ───
 const modelHealthRoutes = require('./routes/modelHealth');
 
+// ─── Phase-10 Step-2: Enterprise Data Drift Detection ───
+const dataDriftRoutes = require('./routes/dataDrift');
+
+// ─── Phase-10 Step-3: Enterprise Feature Drift Analytics ───
+const featureDriftRoutes = require('./routes/featureDrift');
+
+// ─── Phase-10 Step-4: Enterprise Confidence Drift Monitoring ───
+const confidenceDriftRoutes = require('./routes/confidenceDrift');
+
+// ─── Phase-10 Step-5: Enterprise Retraining Recommendation Engine ───
+const retrainingRecommendationRoutes = require('./routes/retrainingRecommendation');
+
+// ─── Phase-10 Step-6: Enterprise Drift History, Smart Alerts & Monitoring Center ───
+const mlopsMonitoringRoutes = require('./routes/mlopsMonitoring');
+
+// ─── Phase-11 Step-1: Enterprise AI Operations Command Center ───
+const aiOperationsRoutes = require('./routes/aiOperations');
+
+// ─── Phase-11 Step-2: Enterprise Model Deployment Center ───
+const modelDeploymentRoutes = require('./routes/modelDeployment');
+
+// ─── Phase-11 Step-3: Enterprise Model Version Comparison Center ───
+const modelComparisonRoutes = require('./routes/modelComparison');
+
+// ─── Phase-11 Step-4: Enterprise Experiment Tracking Center ───
+const experimentTrackingRoutes = require('./routes/experimentTracking');
+
+// ─── Phase-11 Step-5: Enterprise Scheduled Retraining Manager ───
+const retrainingSchedulerRoutes = require('./routes/retrainingScheduler');
+
 // Initialize Express app
 const app = express();
 
@@ -81,6 +111,16 @@ app.use('/api/admin/explainability/predictions', explainabilityPredictionRoutes)
 app.use('/api/admin/explainability/details', explainabilityDetailRoutes);
 app.use('/api/admin/explainability/reports', explainabilityReportRoutes);
 app.use('/api/admin/mlops/model-health', modelHealthRoutes);
+app.use('/api/admin/mlops/data-drift', dataDriftRoutes);
+app.use('/api/admin/mlops/feature-drift', featureDriftRoutes);
+app.use('/api/admin/mlops/confidence-drift', confidenceDriftRoutes);
+app.use('/api/admin/mlops/retraining', retrainingRecommendationRoutes);
+app.use('/api/admin/mlops/monitoring', mlopsMonitoringRoutes);
+app.use('/api/admin/operations', aiOperationsRoutes);
+app.use('/api/admin/deployments', modelDeploymentRoutes);
+app.use('/api/admin/model-comparison', modelComparisonRoutes);
+app.use('/api/admin/experiments', experimentTrackingRoutes);
+app.use('/api/admin/retraining-manager', retrainingSchedulerRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

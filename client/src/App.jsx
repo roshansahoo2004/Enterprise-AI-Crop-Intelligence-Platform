@@ -41,6 +41,36 @@ import ExplainabilityReports from './pages/ExplainabilityReports';
 // ─── Phase-10 Step-1: Enterprise Model Health Dashboard ───
 import ModelHealthDashboard from './pages/ModelHealthDashboard';
 
+// ─── Phase-10 Step-2: Enterprise Data Drift Detection ───
+import DataDriftDashboard from './pages/DataDriftDashboard';
+
+// ─── Phase-10 Step-3: Enterprise Feature Drift Analytics ───
+import FeatureDriftDashboard from './pages/FeatureDriftDashboard';
+
+// ─── Phase-10 Step-4: Enterprise Confidence Drift Monitoring ───
+import ConfidenceDriftDashboard from './pages/ConfidenceDriftDashboard';
+
+// ─── Phase-10 Step-5: Enterprise Retraining Recommendation Engine ───
+import RetrainingRecommendationDashboard from './pages/RetrainingRecommendationDashboard';
+
+// ─── Phase-10 Step-6: Enterprise Drift History, Smart Alerts & Monitoring Center ───
+import MLOpsMonitoringCenter from './pages/MLOpsMonitoringCenter';
+
+// ─── Phase-11 Step-1: Enterprise AI Operations Command Center ───
+import AIOperationsDashboard from './pages/AIOperationsDashboard';
+
+// ─── Phase-11 Step-2: Enterprise Model Deployment Center ───
+import ModelDeploymentCenter from './pages/ModelDeploymentCenter';
+
+// ─── Phase-11 Step-3: Enterprise Model Version Comparison Center ───
+import ModelComparisonCenter from './pages/ModelComparisonCenter';
+
+// ─── Phase-11 Step-4: Enterprise Experiment Tracking Center ───
+import ExperimentTrackingCenter from './pages/ExperimentTrackingCenter';
+
+// ─── Phase-11 Step-5: Enterprise Scheduled Retraining Manager ───
+import RetrainingManager from './pages/RetrainingManager';
+
 const App = () => {
   const { isAuthenticated } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -154,7 +184,7 @@ const App = () => {
             <ProtectedRoute>
               <AdminOnly>
                 <AuthenticatedLayout>
-                  <AdminDashboard />
+                  <AIOperationsDashboard />
                 </AuthenticatedLayout>
               </AdminOnly>
             </ProtectedRoute>
@@ -251,6 +281,146 @@ const App = () => {
               <AdminOnly>
                 <AuthenticatedLayout>
                   <ModelHealthDashboard />
+                </AuthenticatedLayout>
+              </AdminOnly>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Phase-10 Step-2: Enterprise Data Drift Detection */}
+        <Route
+          path="/admin/data-drift"
+          element={
+            <ProtectedRoute>
+              <AdminOnly>
+                <AuthenticatedLayout>
+                  <DataDriftDashboard />
+                </AuthenticatedLayout>
+              </AdminOnly>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Phase-10 Step-3: Enterprise Feature Drift Analytics */}
+        <Route
+          path="/admin/feature-drift"
+          element={
+            <ProtectedRoute>
+              <AdminOnly>
+                <AuthenticatedLayout>
+                  <FeatureDriftDashboard />
+                </AuthenticatedLayout>
+              </AdminOnly>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Phase-10 Step-4: Enterprise Confidence Drift Monitoring */}
+        <Route
+          path="/admin/confidence-drift"
+          element={
+            <ProtectedRoute>
+              <AdminOnly>
+                <AuthenticatedLayout>
+                  <ConfidenceDriftDashboard />
+                </AuthenticatedLayout>
+              </AdminOnly>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Phase-10 Step-5: Enterprise Retraining Recommendation Engine */}
+        <Route
+          path="/admin/retraining"
+          element={
+            <ProtectedRoute>
+              <AdminOnly>
+                <AuthenticatedLayout>
+                  <RetrainingRecommendationDashboard />
+                </AuthenticatedLayout>
+              </AdminOnly>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Phase-10 Step-6: Enterprise Drift History, Smart Alerts & Monitoring Center */}
+        <Route
+          path="/admin/mlops-monitoring"
+          element={
+            <ProtectedRoute>
+              <AdminOnly>
+                <AuthenticatedLayout>
+                  <MLOpsMonitoringCenter />
+                </AuthenticatedLayout>
+              </AdminOnly>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Phase-11 Step-1: Enterprise AI Operations Command Center */}
+        <Route
+          path="/admin/operations"
+          element={
+            <ProtectedRoute>
+              <AdminOnly>
+                <AuthenticatedLayout>
+                  <AIOperationsDashboard />
+                </AuthenticatedLayout>
+              </AdminOnly>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Phase-11 Step-2: Enterprise Model Deployment Center */}
+        <Route
+          path="/admin/deployments"
+          element={
+            <ProtectedRoute>
+              <AdminOnly>
+                <AuthenticatedLayout>
+                  <ModelDeploymentCenter />
+                </AuthenticatedLayout>
+              </AdminOnly>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Phase-11 Step-3: Enterprise Model Version Comparison Center */}
+        <Route
+          path="/admin/model-comparison"
+          element={
+            <ProtectedRoute>
+              <AdminOnly>
+                <AuthenticatedLayout>
+                  <ModelComparisonCenter />
+                </AuthenticatedLayout>
+              </AdminOnly>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Phase-11 Step-4: Enterprise Experiment Tracking Center */}
+        <Route
+          path="/admin/experiments"
+          element={
+            <ProtectedRoute>
+              <AdminOnly>
+                <AuthenticatedLayout>
+                  <ExperimentTrackingCenter />
+                </AuthenticatedLayout>
+              </AdminOnly>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Phase-11 Step-5: Enterprise Scheduled Retraining Manager */}
+        <Route
+          path="/admin/retraining-manager"
+          element={
+            <ProtectedRoute>
+              <AdminOnly>
+                <AuthenticatedLayout>
+                  <RetrainingManager />
                 </AuthenticatedLayout>
               </AdminOnly>
             </ProtectedRoute>

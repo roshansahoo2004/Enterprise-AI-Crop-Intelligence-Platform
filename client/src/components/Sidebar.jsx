@@ -1,7 +1,32 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { NavLink, useLocation } from 'react-router-dom';
-import { FiHome, FiCrosshair, FiClock, FiPieChart, FiSettings, FiX, FiShield, FiCpu, FiDatabase, FiTrendingUp, FiZap, FiSearch, FiChevronDown, FiBarChart2, FiFileText, FiHeart } from 'react-icons/fi';
+import {
+  FiHome,
+  FiCrosshair,
+  FiClock,
+  FiPieChart,
+  FiSettings,
+  FiX,
+  FiShield,
+  FiCpu,
+  FiDatabase,
+  FiTrendingUp,
+  FiZap,
+  FiSearch,
+  FiChevronDown,
+  FiBarChart2,
+  FiFileText,
+  FiHeart,
+  FiActivity,
+  FiGrid,
+  FiPercent,
+  FiSliders,
+  FiRadio,
+  FiTv,
+  FiSend,
+  FiRepeat
+} from 'react-icons/fi';
 
 const Sidebar = ({ isOpen, closeSidebar }) => {
   const { user } = useAuth();
@@ -20,16 +45,41 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
     // ─── Phase-4 Step-2: Admin section ───
     ...(user?.role === "admin"
       ? [
+        // ─── Phase-11 Step-1: AI Operations Command Center ───
         {
-          name: 'MLOps Dashboard',
-          path: '/admin/dashboard',
-          icon: <FiCpu className="h-5 w-5" />
+          name: 'AI Operations',
+          path: '/admin/operations',
+          icon: <FiTv className="h-5 w-5" />
+        },
+        // ─── Phase-11 Step-2: Enterprise Model Deployment Center ───
+        {
+          name: 'Model Deployment',
+          path: '/admin/deployments',
+          icon: <FiSend className="h-5 w-5" />
         },
         // ─── Phase-6 Step-1: Model Registry ───
         {
           name: 'Model Registry',
           path: '/admin/model-registry',
           icon: <FiDatabase className="h-5 w-5" />
+        },
+        // ─── Phase-11 Step-3: Enterprise Model Version Comparison Center ───
+        {
+          name: 'Model Comparison',
+          path: '/admin/model-comparison',
+          icon: <FiSliders className="h-5 w-5" />
+        },
+        // ─── Phase-11 Step-4: Enterprise Experiment Tracking Center ───
+        {
+          name: 'Experiment Tracking',
+          path: '/admin/experiments',
+          icon: <FiActivity className="h-5 w-5" />
+        },
+        // ─── Phase-11 Step-5: Enterprise Scheduled Retraining Manager ───
+        {
+          name: 'Retraining Manager',
+          path: '/admin/retraining-manager',
+          icon: <FiRepeat className="h-5 w-5" />
         },
         // ─── Phase-7 Step-1: Model Performance Dashboard ───
         {
@@ -42,6 +92,36 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
           name: 'Model Health',
           path: '/admin/model-health',
           icon: <FiHeart className="h-5 w-5" />
+        },
+        // ─── Phase-10 Step-2: Data Drift Detection ───
+        {
+          name: 'Data Drift',
+          path: '/admin/data-drift',
+          icon: <FiActivity className="h-5 w-5" />
+        },
+        // ─── Phase-10 Step-3: Feature Drift Analytics ───
+        {
+          name: 'Feature Drift',
+          path: '/admin/feature-drift',
+          icon: <FiGrid className="h-5 w-5" />
+        },
+        // ─── Phase-10 Step-4: Confidence Drift Monitoring ───
+        {
+          name: 'Confidence Drift',
+          path: '/admin/confidence-drift',
+          icon: <FiPercent className="h-5 w-5" />
+        },
+        // ─── Phase-10 Step-5: Retraining Recommendation Engine ───
+        {
+          name: 'Retraining Recommendation',
+          path: '/admin/retraining',
+          icon: <FiSliders className="h-5 w-5" />
+        },
+        // ─── Phase-10 Step-6: Monitoring Center ───
+        {
+          name: 'Monitoring Center',
+          path: '/admin/mlops-monitoring',
+          icon: <FiRadio className="h-5 w-5" />
         },
         // ─── Phase-9 Step-4: Explainability submenu placeholder (rendered separately) ───
         {
