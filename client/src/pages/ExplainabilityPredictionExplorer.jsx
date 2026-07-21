@@ -37,11 +37,7 @@ const ExplainabilityPredictionExplorer = () => {
     ...filters
   });
 
-  // ─── Detail Drawer State ───
-  const [selectedId, setSelectedId] = useState(null);
-  const [detail, setDetail] = useState(null);
-  const [detailLoading, setDetailLoading] = useState(false);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
 
   // ─── Fetch List ───
   const fetchPredictionsList = async (silent = false) => {
@@ -63,24 +59,7 @@ const ExplainabilityPredictionExplorer = () => {
     }
   };
 
-  // ─── Fetch Detail ───
-  const fetchPredictionDetail = async (id) => {
-    setDetailLoading(true);
-    try {
-      const res = await explainabilityPredictionApi.getPredictionDetail(id);
-      if (res.data?.success) {
-        setDetail(res.data.prediction);
-        setIsDrawerOpen(true);
-      } else {
-        toast.error('Failed to load prediction details.');
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error(err.response?.data?.message || 'Error loading detail record.');
-    } finally {
-      setDetailLoading(false);
-    }
-  };
+
 
   useEffect(() => {
     fetchPredictionsList();
@@ -473,7 +452,7 @@ const ExplainabilityPredictionExplorer = () => {
                     </td>
                     <td className="p-4 pr-6 text-right">
                       <button
-                        onClick={() => fetchPredictionDetail(p._id)}
+                        onClick={() => navigate(`/admin/explainability/details/${p._id}`)}
                         className="p-2 bg-white/5 hover:bg-primary-500/20 text-gray-400 hover:text-primary-400 rounded-lg transition-all group-hover:scale-105"
                         title="Inspect explanation detail"
                       >
@@ -517,199 +496,6 @@ const ExplainabilityPredictionExplorer = () => {
           </div>
         )}
       </div>
-
-      {/* ─── Detail Drawer Overlay ─── */}
-      {isDrawerOpen && detail && (
-        <div className="fixed inset-0 z-50 flex justify-end">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300"
-            onClick={() => setIsDrawerOpen(false)}
-          />
-
-          {/* Drawer content (slides right-to-left) */}
-          <div className="relative w-full max-w-2xl h-full bg-surface-950 border-l border-white/10 shadow-2xl p-6 overflow-y-auto flex flex-col justify-between transition-transform duration-300 animate-slide-left z-10">
-            <div>
-              {/* Drawer Header */}
-              <div className="flex justify-between items-start pb-4 border-b border-white/10 mb-6">
-                <div>
-                  <h2 className="text-xl font-display font-bold text-white capitalize flex items-center gap-2">
-                    <span>Recommendation Details</span>
-                  </h2>
-                  <p className="text-xs text-gray-500 font-mono mt-0.5">ID: {detail._id}</p>
-                </div>
-                <button
-                  onClick={() => setIsDrawerOpen(false)}
-                  className="p-1.5 bg-white/5 hover:bg-white/10 rounded-lg text-gray-400 hover:text-white transition-colors"
-                >
-                  <FiX className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Grid 1: Profiles */}
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="bg-white/[0.02] border border-white/5 p-4 rounded-xl">
-                  <span className="block text-[10px] text-gray-500 font-bold uppercase tracking-wider">Classification</span>
-                  <h4 className="text-2xl font-bold text-white capitalize mt-1">{detail.predictedCrop}</h4>
-                  <span className="text-xs text-gray-400 font-mono">Confidence: {detail.confidence.toFixed(1)}%</span>
-                </div>
-                <div className="bg-white/[0.02] border border-white/5 p-4 rounded-xl">
-                  <span className="block text-[10px] text-gray-500 font-bold uppercase tracking-wider">Serving Latency</span>
-                  <h4 className="text-2xl font-bold text-primary-400 mt-1 font-mono">{detail.predictionTimeMs} ms</h4>
-                  <span className="text-xs text-gray-400 font-mono">SHAP time: {detail.explanation?.shapAvailable ? `${detail.shapTimeMs} ms` : '—'}</span>
-                </div>
-              </div>
-
-              {/* Section 2: IoT inputs */}
-              <div className="mb-6">
-                <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                  <FiActivity className="text-cyan-400 w-3.5 h-3.5" /> IoT Sensor Inputs
-                </h3>
-                <div className="grid grid-cols-3 gap-3">
-                  {Object.entries(detail.inputs).map(([key, val]) => (
-                    <div key={key} className="bg-surface-900 border border-white/5 px-3 py-2 rounded-lg text-xs font-medium">
-                      <span className="text-gray-500 capitalize">{key}</span>
-                      <span className="block text-white font-bold font-mono mt-0.5">{val}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Section 3: Explanation Engine */}
-              <div className="mb-6 border-t border-white/5 pt-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                    <FiShield className="text-emerald-400 w-3.5 h-3.5" /> XAI Engine Analysis
-                  </h3>
-                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${detail.explanation?.shapAvailable
-                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                    : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
-                    }`}>
-                    {detail.explanation?.engine}
-                  </span>
-                </div>
-
-                {/* If SHAP is available */}
-                {detail.explanation?.shapAvailable ? (
-                  <div className="space-y-4">
-                    {/* Base & Expected Values */}
-                    <div className="grid grid-cols-2 gap-4 bg-white/[0.01] border border-white/5 p-3 rounded-lg text-xs">
-                      <div>
-                        <span className="text-gray-500 font-semibold block">Base/Expected Value</span>
-                        <span className="text-white font-bold font-mono text-sm mt-0.5 block">
-                          {(detail.explanation?.baseValue * 100).toFixed(1)}%
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-gray-500 font-semibold block">Final Output Prob</span>
-                        <span className="text-white font-bold font-mono text-sm mt-0.5 block">
-                          {detail.confidence.toFixed(1)}%
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Contributions List */}
-                    <div className="space-y-2.5">
-                      <span className="text-xs text-gray-500 font-bold block">Feature SHAP Contributions</span>
-                      {detail.explanation?.featureContributions.map((contrib) => {
-                        const isPositive = contrib.direction === 'positive';
-                        const isNegative = contrib.direction === 'negative';
-
-                        return (
-                          <div key={contrib.feature} className="flex items-center justify-between bg-surface-900 p-2.5 rounded-lg border border-white/5 text-xs">
-                            <div className="flex items-center gap-2">
-                              {isPositive ? (
-                                <FiTrendingUp className="text-green-400 w-4 h-4 shrink-0" />
-                              ) : isNegative ? (
-                                <FiTrendingDown className="text-red-400 w-4 h-4 shrink-0" />
-                              ) : (
-                                <FiInfo className="text-blue-400 w-4 h-4 shrink-0" />
-                              )}
-                              <span className="font-semibold text-white">{contrib.feature}</span>
-                            </div>
-                            <div className="flex items-center gap-3">
-                              <span className="text-gray-400 font-mono">
-                                SHAP: <span className={isPositive ? 'text-green-400' : isNegative ? 'text-red-400' : 'text-gray-300'}>
-                                  {contrib.shapValue > 0 ? '+' : ''}{contrib.shapValue.toFixed(4)}
-                                </span>
-                              </span>
-                              <span className="font-bold text-white font-mono w-12 text-right">
-                                {contrib.importance.toFixed(0)}%
-                              </span>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                ) : (
-                  // Fallback engine alert
-                  <div className="space-y-4">
-                    <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-xl flex gap-3 text-xs leading-relaxed text-amber-400">
-                      <FiAlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
-                      <div>
-                        <h4 className="font-bold mb-1">SHAP Explanation Failed</h4>
-                        <p className="text-gray-400">
-                          The system automatically executed the heuristic range engine. SHAP calculation fallback occurred.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <span className="text-xs text-gray-500 font-bold block">Fallback Diagnostic Messages</span>
-                      <ul className="space-y-2">
-                        {detail.explanation?.messages.map((m, idx) => (
-                          <li key={idx} className="bg-surface-900 border border-white/5 p-3 rounded-lg text-xs text-gray-300 flex items-center gap-2">
-                            <FiInfo className="text-blue-400 w-4 h-4 shrink-0" />
-                            <span>{m.text || m}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Section 4: Contexts */}
-              <div className="grid grid-cols-2 gap-4 border-t border-white/5 pt-6">
-                <div>
-                  <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <FiCalendar className="text-blue-400 w-3.5 h-3.5" /> Weather Context
-                  </h3>
-                  {detail.weatherData ? (
-                    <div className="bg-surface-900 border border-white/5 p-3 rounded-lg text-xs space-y-1">
-                      <p className="text-white font-semibold">{detail.weatherData.location || 'Unknown location'}</p>
-                      <p className="text-gray-400 capitalize">{detail.weatherData.condition}</p>
-                    </div>
-                  ) : (
-                    <p className="text-xs text-gray-500 italic">No weather context recorded</p>
-                  )}
-                </div>
-
-                <div>
-                  <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <FiUser className="text-purple-400 w-3.5 h-3.5" /> User Context
-                  </h3>
-                  {detail.user ? (
-                    <div className="bg-surface-900 border border-white/5 p-3 rounded-lg text-xs space-y-1">
-                      <p className="text-white font-semibold">{detail.user.name}</p>
-                      <p className="text-gray-400 font-mono">{detail.user.email}</p>
-                    </div>
-                  ) : (
-                    <p className="text-xs text-gray-500 italic">Anonymous System User</p>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Footer */}
-            <div className="mt-8 pt-4 border-t border-white/10 flex justify-between items-center text-xs text-gray-500">
-              <span className="font-mono">Model Version: {detail.explanation?.modelVersion || 'v1.0'}</span>
-              <span>Generated: {new Date(detail.createdAt).toLocaleString()}</span>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

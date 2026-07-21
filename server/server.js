@@ -31,6 +31,9 @@ const explainabilityRoutes = require('./routes/explainability');
 // ─── Phase-9 Step-2: Explainability Prediction Explorer ───
 const explainabilityPredictionRoutes = require('./routes/explainabilityPrediction');
 
+// ─── Phase-9 Step-3: Explainability Prediction Detail Inspector ───
+const explainabilityDetailRoutes = require('./routes/explainabilityDetail');
+
 // Initialize Express app
 const app = express();
 
@@ -69,6 +72,7 @@ app.use('/api/admin/model-service', modelServiceRoutes);
 app.use('/api/admin/model-dashboard', modelDashboardRoutes);
 app.use('/api/admin/explainability', explainabilityRoutes);
 app.use('/api/admin/explainability/predictions', explainabilityPredictionRoutes);
+app.use('/api/admin/explainability/details', explainabilityDetailRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

@@ -32,6 +32,9 @@ import ExplainabilityAnalytics from './pages/ExplainabilityAnalytics';
 // ─── Phase-9 Step-2: Explainability Prediction Explorer ───
 import ExplainabilityPredictionExplorer from './pages/ExplainabilityPredictionExplorer';
 
+// ─── Phase-9 Step-3: Explainability Prediction Detail Inspector ───
+import ExplainabilityDetail from './pages/ExplainabilityDetail';
+
 const App = () => {
   const { isAuthenticated } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -200,6 +203,20 @@ const App = () => {
               <AdminOnly>
                 <AuthenticatedLayout>
                   <ExplainabilityPredictionExplorer />
+                </AuthenticatedLayout>
+              </AdminOnly>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Phase-9 Step-3: Explainability Prediction Detail Inspector */}
+        <Route
+          path="/admin/explainability/details/:predictionId"
+          element={
+            <ProtectedRoute>
+              <AdminOnly>
+                <AuthenticatedLayout>
+                  <ExplainabilityDetail />
                 </AuthenticatedLayout>
               </AdminOnly>
             </ProtectedRoute>
