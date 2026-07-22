@@ -1,21 +1,20 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { NavLink, useLocation } from 'react-router-dom';
 import {
   FiHome,
-  FiCrosshair,
+  FiZap,
   FiClock,
   FiPieChart,
-  FiSettings,
-  FiX,
   FiShield,
-  FiCpu,
+  FiX,
+  FiSun,
   FiDatabase,
+  FiCrosshair,
   FiTrendingUp,
-  FiZap,
-  FiSearch,
+  FiEye,
   FiChevronDown,
-  FiBarChart2,
+  FiChevronRight,
   FiFileText,
   FiHeart,
   FiActivity,
@@ -26,27 +25,65 @@ import {
   FiTv,
   FiSend,
   FiRepeat,
-  FiGitBranch
+  FiGitBranch,
+  FiCpu,
+  FiMessageSquare,
+  FiCalendar
 } from 'react-icons/fi';
 
 const Sidebar = ({ isOpen, closeSidebar }) => {
   const { user } = useAuth();
-  const location = useLocation();
-  const [explainabilityOpen, setExplainabilityOpen] = useState(
-    location.pathname.startsWith('/admin/explainability')
-  );
+  const [explainabilityOpen, setExplainabilityOpen] = useState(false);
 
-  // ─── Phase-4 Step-2: Only show admin nav item if user is admin ───
-  const navItems = [
-    { name: 'Dashboard', path: '/', icon: <FiHome className="h-5 w-5" /> },
-    { name: 'Predict Crop', path: '/predict', icon: <FiCrosshair className="h-5 w-5" /> },
-    { name: 'Disease Detection', path: '/disease-detection', icon: <FiCrosshair className="h-5 w-5" /> },
-    { name: 'History', path: '/history', icon: <FiClock className="h-5 w-5" /> },
-    { name: 'Analytics', path: '/analytics', icon: <FiPieChart className="h-5 w-5" /> },
-    // ─── Phase-4 Step-2: Admin section ───
-    ...(user?.role === "admin"
+  const navigation = [
+    {
+      name: 'Dashboard',
+      path: '/dashboard',
+      icon: <FiHome className="h-5 w-5" />
+    },
+    {
+      name: 'Crop Prediction',
+      path: '/predict',
+      icon: <FiZap className="h-5 w-5" />
+    },
+    {
+      name: 'Disease Detection',
+      path: '/disease-detection',
+      icon: <FiCrosshair className="h-5 w-5" />
+    },
+    {
+      name: 'AI Yield Prediction',
+      path: '/yield-prediction',
+      icon: <FiTrendingUp className="h-5 w-5" />
+    },
+    {
+      name: 'AI Assistant',
+      path: '/assistant',
+      icon: <FiMessageSquare className="h-5 w-5" />
+    },
+    {
+      name: 'Disease Heatmap',
+      path: '/disease-heatmap',
+      icon: <FiCrosshair className="h-5 w-5" />
+    },
+    {
+      name: 'Smart Crop Calendar',
+      path: '/crop-calendar',
+      icon: <FiCalendar className="h-5 w-5" />
+    },
+    {
+      name: 'Prediction History',
+      path: '/history',
+      icon: <FiClock className="h-5 w-5" />
+    },
+    {
+      name: 'Analytics',
+      path: '/analytics',
+      icon: <FiPieChart className="h-5 w-5" />
+    },
+    ...(user?.role === 'admin'
       ? [
-        // ─── Phase-11 Step-1: AI Operations Command Center ───
+        // ─── Phase-11 Step-1: Enterprise AI Operations Dashboard ───
         {
           name: 'AI Operations',
           path: '/admin/operations',
@@ -94,6 +131,12 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
           path: '/admin/governance',
           icon: <FiShield className="h-5 w-5" />
         },
+        // ─── Phase-12 Step-7: Enterprise Observability & Monitoring Center ───
+        {
+          name: 'Observability',
+          path: '/admin/observability',
+          icon: <FiCpu className="h-5 w-5" />
+        },
         // ─── Phase-7 Step-1: Model Performance Dashboard ───
         {
           name: 'Model Performance',
@@ -136,7 +179,7 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
           path: '/admin/mlops-monitoring',
           icon: <FiRadio className="h-5 w-5" />
         },
-        // ─── Phase-9 Step-4: Explainability submenu placeholder (rendered separately) ───
+        // ─── Phase-9 Step-4: Explainability submenu placeholder ───
         {
           name: '__EXPLAINABILITY_SUBMENU__',
           isSubmenu: true
@@ -150,20 +193,19 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
       : [])
   ];
 
-  // ─── Phase-9 Step-4: Explainability sub-navigation items ───
-  const explainabilitySubItems = [
+  const explainabilityItems = [
     {
-      name: 'Analytics',
+      name: 'Analytics Overview',
       path: '/admin/explainability',
-      icon: <FiBarChart2 className="h-4 w-4" />
+      icon: <FiTrendingUp className="h-4 w-4" />
     },
     {
       name: 'Prediction Explorer',
       path: '/admin/explainability/predictions',
-      icon: <FiSearch className="h-4 w-4" />
+      icon: <FiEye className="h-4 w-4" />
     },
     {
-      name: 'Reports',
+      name: 'Export Reports',
       path: '/admin/explainability/reports',
       icon: <FiFileText className="h-4 w-4" />
     }
@@ -174,99 +216,129 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
       {/* Mobile backdrop */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
           onClick={closeSidebar}
         />
       )}
 
+      {/* Sidebar container */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex h-screen w-72 flex-col glass-card m-4 transform transition-transform duration-300 ease-in-out md:static md:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full md:m-0 md:rounded-none md:border-y-0 md:border-l-0 md:bg-transparent md:backdrop-blur-none'
-          } ${!isOpen ? 'md:border-r md:border-white/10 md:bg-surface-950/50 md:m-0' : ''}`}
-        style={!isOpen ? { margin: 0, borderRadius: 0 } : {}}
+        className={`fixed top-0 left-0 z-50 h-full w-64 transform bg-surface-900 border-r border-white/5 p-4 transition-transform duration-300 ease-in-out md:static md:translate-x-0 ${
+          isOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
       >
-        <div className={`flex-1 overflow-y-auto p-6 ${!isOpen ? 'md:p-6' : ''}`}>
-          <div className="flex items-center justify-between mb-8 md:mb-12">
-            <h2 className="text-2xl font-display font-bold">
-              <span className="text-primary-400">Agri</span>Sense
-            </h2>
-            <button onClick={closeSidebar} className="text-gray-400 hover:text-white md:hidden">
-              <FiX className="h-6 w-6" />
-            </button>
+        <div className="flex h-full flex-col justify-between">
+          <div>
+            {/* Logo */}
+            <div className="flex items-center justify-between mb-8 px-2 pt-2">
+              <div className="flex items-center space-x-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-primary-600 to-primary-400 text-slate-950 shadow-glow">
+                  <FiSun className="h-6 w-6" />
+                </div>
+                <div>
+                  <h1 className="text-lg font-bold font-display text-white tracking-wide">
+                    Crop AI
+                  </h1>
+                  <p className="text-[10px] text-primary-400 font-mono tracking-widest uppercase">
+                    Platform
+                  </p>
+                </div>
+              </div>
+
+              {/* Close button for mobile */}
+              <button
+                onClick={closeSidebar}
+                className="rounded-lg p-1.5 text-gray-400 hover:bg-white/5 hover:text-white md:hidden"
+              >
+                <FiX className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Navigation links */}
+            <nav className="space-y-1.5 overflow-y-auto max-h-[calc(100vh-200px)] custom-scrollbar pr-1">
+              {navigation.map((item, index) => {
+                if (item.isSubmenu) {
+                  return (
+                    <div key={`submenu-${index}`} className="space-y-1">
+                      <button
+                        onClick={() => setExplainabilityOpen(!explainabilityOpen)}
+                        className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:bg-white/5 hover:text-white transition-all"
+                      >
+                        <div className="flex items-center space-x-3">
+                          <FiEye className="h-5 w-5 text-secondary-400" />
+                          <span>Explainability</span>
+                        </div>
+                        {explainabilityOpen ? (
+                          <FiChevronDown className="h-4 w-4" />
+                        ) : (
+                          <FiChevronRight className="h-4 w-4" />
+                        )}
+                      </button>
+
+                      {explainabilityOpen && (
+                        <div className="pl-6 space-y-1 mt-1">
+                          {explainabilityItems.map((subItem) => (
+                            <NavLink
+                              key={subItem.path}
+                              to={subItem.path}
+                              onClick={closeSidebar}
+                              className={({ isActive }) =>
+                                `flex items-center space-x-3 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                                  isActive
+                                    ? 'bg-secondary-500/10 text-secondary-400 border border-secondary-500/20'
+                                    : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                                }`
+                              }
+                            >
+                              {subItem.icon}
+                              <span>{subItem.name}</span>
+                            </NavLink>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+
+                return (
+                  <NavLink
+                    key={item.path}
+                    to={item.path}
+                    onClick={closeSidebar}
+                    className={({ isActive }) =>
+                      `flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                        isActive
+                          ? 'bg-gradient-to-r from-primary-500/20 to-primary-500/5 text-primary-400 border border-primary-500/30 font-semibold shadow-glow-sm'
+                          : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                      }`
+                    }
+                  >
+                    <span className="shrink-0">{item.icon}</span>
+                    <span className="truncate">{item.name}</span>
+                  </NavLink>
+                );
+              })}
+            </nav>
           </div>
 
-          <nav className="flex flex-col gap-2">
-            {navItems.map((item) => {
-              // ─── Phase-9 Step-4: Render Explainability submenu ───
-              if (item.isSubmenu) {
-                const isAnySubActive = location.pathname.startsWith('/admin/explainability');
-                return (
-                  <div key="explainability-submenu">
-                    <button
-                      onClick={() => setExplainabilityOpen(!explainabilityOpen)}
-                      className={`w-full flex items-center justify-between gap-4 rounded-xl px-4 py-3 transition-all duration-300 ${isAnySubActive
-                        ? 'bg-gradient-to-r from-primary-500/20 to-transparent text-primary-400 shadow-[inset_2px_0_0_0_#10b981]'
-                        : 'text-gray-400 hover:bg-white/5 hover:text-gray-200'
-                        }`}
-                    >
-                      <div className="flex items-center gap-4">
-                        <FiZap className="h-5 w-5" />
-                        <span className="font-medium">Explainability</span>
-                      </div>
-                      <FiChevronDown className={`h-4 w-4 transition-transform duration-300 ${explainabilityOpen ? 'rotate-180' : ''}`} />
-                    </button>
-                    <div className={`overflow-hidden transition-all duration-300 ${explainabilityOpen ? 'max-h-48 mt-1' : 'max-h-0'}`}>
-                      <div className="ml-4 pl-4 border-l border-white/10 flex flex-col gap-1">
-                        {explainabilitySubItems.map((sub) => (
-                          <NavLink
-                            key={sub.name}
-                            to={sub.path}
-                            end={sub.path === '/admin/explainability'}
-                            onClick={closeSidebar}
-                            className={({ isActive }) =>
-                              `flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-300 ${isActive
-                                ? 'text-primary-400 bg-primary-500/10'
-                                : 'text-gray-500 hover:bg-white/5 hover:text-gray-300'
-                              }`
-                            }
-                          >
-                            {sub.icon}
-                            <span className="font-medium">{sub.name}</span>
-                          </NavLink>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                );
-              }
-
-              return (
-                <NavLink
-                  key={item.name}
-                  to={item.path}
-                  onClick={closeSidebar}
-                  className={({ isActive }) =>
-                    `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-300 ${isActive
-                      ? 'bg-gradient-to-r from-primary-500/20 to-transparent text-primary-400 shadow-[inset_2px_0_0_0_#10b981]'
-                      : 'text-gray-400 hover:bg-white/5 hover:text-gray-200'
-                    }`
-                  }
-                >
-                  {item.icon}
-                  <span className="font-medium">{item.name}</span>
-                </NavLink>
-              );
-            })}
-          </nav>
-        </div>
-
-        <div className={`mt-auto p-6 ${!isOpen ? 'md:p-6' : ''}`}>
-          <div className="rounded-xl border border-white/5 bg-white/5 p-4 relative overflow-hidden group">
-            <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary-500/20 rounded-full blur-2xl group-hover:bg-primary-500/30 transition-all"></div>
-            <h3 className="font-medium text-white mb-1 relative z-10">Pro Plan</h3>
-            <p className="text-xs text-gray-400 mb-3 relative z-10">Get unlimited predictions</p>
-            <button className="w-full rounded-lg bg-primary-500/20 py-2 text-xs font-semibold text-primary-400 transition-colors hover:bg-primary-500/30 relative z-10">
-              Upgrade Now
-            </button>
+          {/* User badge at bottom */}
+          <div className="border-t border-white/5 pt-4 px-2">
+            <div className="flex items-center space-x-3 rounded-xl bg-white/[0.02] p-2 border border-white/5">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-surface-800 text-gray-300 font-bold border border-white/10 font-mono text-sm">
+                {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+              </div>
+              <div className="overflow-hidden flex-1">
+                <p className="text-xs font-semibold text-white truncate">
+                  {user?.name || 'User'}
+                </p>
+                <div className="flex items-center space-x-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                  <p className="text-[10px] text-gray-400 capitalize font-mono">
+                    {user?.role || 'Farmer'}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </aside>

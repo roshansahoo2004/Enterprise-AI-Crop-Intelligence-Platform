@@ -1,483 +1,540 @@
-import React, { useState } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './context/AuthContext';
-import { Toaster } from 'react-hot-toast';
-
-// Layout components
+import { useState, lazy, Suspense } from 'react';
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuth } from "./context/AuthContext";
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
-import ProtectedRoute from './components/ProtectedRoute';
-import AdminOnly from './components/AdminOnly';
+import { SkeletonCard, SkeletonTable } from './components/ui/LoadingSkeleton';
 
-// Pages
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Dashboard from './pages/Dashboard';
-import Predict from './pages/Predict';
-import History from './pages/History';
-import Analytics from './pages/Analytics';
-import DiseaseDetection from './pages/DiseaseDetection';
-import AdminFeedback from './pages/AdminFeedback';
-import AdminDashboard from './pages/AdminDashboard';
+// ─── Lazy Loaded Major Page Components ──────────────────────────────────────
+const Login = lazy(() => import('./pages/Login'));
+const Signup = lazy(() => import('./pages/Signup'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Predict = lazy(() => import('./pages/Predict'));
+const History = lazy(() => import('./pages/History'));
+const Analytics = lazy(() => import('./pages/Analytics'));
+const DiseaseDetection = lazy(() => import('./pages/DiseaseDetection'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const AdminFeedback = lazy(() => import('./pages/AdminFeedback'));
+const ModelDashboard = lazy(() => import('./pages/ModelDashboard'));
 
-// ─── Phase-6 Step-1: Model Registry ───
-import ModelRegistry from './pages/ModelRegistry';
+// Phase 12.8 AI Expansion Pack Lazy Components
+const YieldPredictionPage = lazy(() => import('./pages/YieldPredictionPage'));
+const FarmerAssistantPage = lazy(() => import('./pages/FarmerAssistantPage'));
+const DiseaseHeatmapPage = lazy(() => import('./pages/DiseaseHeatmapPage'));
+const CropCalendarPage = lazy(() => import('./pages/CropCalendarPage'));
 
-// ─── Phase-7 Step-1: Model Performance Dashboard ───
-import ModelDashboard from './pages/ModelDashboard';
+// MLOps Center Lazy Components
+const ModelRegistry = lazy(() => import('./pages/ModelRegistry'));
+const ExplainabilityAnalytics = lazy(() => import('./pages/ExplainabilityAnalytics'));
+const ExplainabilityPredictionExplorer = lazy(() => import('./pages/ExplainabilityPredictionExplorer'));
+const ExplainabilityDetail = lazy(() => import('./pages/ExplainabilityDetail'));
+const ExplainabilityReports = lazy(() => import('./pages/ExplainabilityReports'));
+const ModelHealthDashboard = lazy(() => import('./pages/ModelHealthDashboard'));
+const DataDriftDashboard = lazy(() => import('./pages/DataDriftDashboard'));
+const FeatureDriftDashboard = lazy(() => import('./pages/FeatureDriftDashboard'));
+const ConfidenceDriftDashboard = lazy(() => import('./pages/ConfidenceDriftDashboard'));
+const RetrainingRecommendationDashboard = lazy(() => import('./pages/RetrainingRecommendationDashboard'));
+const MLOpsMonitoringCenter = lazy(() => import('./pages/MLOpsMonitoringCenter'));
+const AIOperationsDashboard = lazy(() => import('./pages/AIOperationsDashboard'));
+const ModelDeploymentCenter = lazy(() => import('./pages/ModelDeploymentCenter'));
+const ModelComparisonCenter = lazy(() => import('./pages/ModelComparisonCenter'));
+const ExperimentTrackingCenter = lazy(() => import('./pages/ExperimentTrackingCenter'));
+const RetrainingManager = lazy(() => import('./pages/RetrainingManager'));
+const PipelineOrchestrator = lazy(() => import('./pages/PipelineOrchestrator'));
+const GovernanceCenter = lazy(() => import('./pages/GovernanceCenter'));
+const ObservabilityCenter = lazy(() => import('./pages/ObservabilityCenter'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
+const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 
-// ─── Phase-9 Step-1: Explainability Analytics Dashboard ───
-import ExplainabilityAnalytics from './pages/ExplainabilityAnalytics';
 
-// ─── Phase-9 Step-2: Explainability Prediction Explorer ───
-import ExplainabilityPredictionExplorer from './pages/ExplainabilityPredictionExplorer';
+// Page Fallback Loader
+const PageFallback = () => (
+  <div className="space-y-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {[...Array(4)].map((_, i) => <SkeletonCard key={i} />)}
+    </div>
+    <SkeletonTable rows={6} />
+  </div>
+);
 
-// ─── Phase-9 Step-3: Explainability Prediction Detail Inspector ───
-import ExplainabilityDetail from './pages/ExplainabilityDetail';
+// Layout wrapper for authenticated pages (declared outside render to prevent re-creation)
+const AuthenticatedLayout = ({ children, isSidebarOpen, toggleSidebar, closeSidebar }) => (
+  <div className="flex h-screen w-full overflow-hidden bg-surface-950 bg-mesh relative">
+    {/* Decorative background blurs */}
+    <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary-500/10 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+    <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary-500/10 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
 
-// ─── Phase-9 Step-4: Explainability Reporting & Export Center ───
-import ExplainabilityReports from './pages/ExplainabilityReports';
+    <Sidebar isOpen={isSidebarOpen} closeSidebar={closeSidebar} />
 
-// ─── Phase-10 Step-1: Enterprise Model Health Dashboard ───
-import ModelHealthDashboard from './pages/ModelHealthDashboard';
+    <div className="flex flex-1 flex-col h-full w-full overflow-hidden md:pl-0">
+      <Navbar toggleSidebar={toggleSidebar} />
 
-// ─── Phase-10 Step-2: Enterprise Data Drift Detection ───
-import DataDriftDashboard from './pages/DataDriftDashboard';
+      <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-6 lg:p-8 custom-scrollbar">
+        <div className="max-w-7xl mx-auto h-full">
+          <Suspense fallback={<PageFallback />}>
+            {children}
+          </Suspense>
+        </div>
+      </main>
+    </div>
+  </div>
+);
 
-// ─── Phase-10 Step-3: Enterprise Feature Drift Analytics ───
-import FeatureDriftDashboard from './pages/FeatureDriftDashboard';
+// Protected route wrapper
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated, loading } = useAuth();
 
-// ─── Phase-10 Step-4: Enterprise Confidence Drift Monitoring ───
-import ConfidenceDriftDashboard from './pages/ConfidenceDriftDashboard';
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-surface-950 flex flex-col items-center justify-center gap-3">
+        <div className="w-12 h-12 border-4 border-primary-500/20 border-t-primary-500 rounded-full animate-spin"></div>
+        <p className="text-gray-400 font-mono text-sm animate-pulse">Initializing AI Crop Intelligence Engine...</p>
+      </div>
+    );
+  }
 
-// ─── Phase-10 Step-5: Enterprise Retraining Recommendation Engine ───
-import RetrainingRecommendationDashboard from './pages/RetrainingRecommendationDashboard';
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
 
-// ─── Phase-10 Step-6: Enterprise Drift History, Smart Alerts & Monitoring Center ───
-import MLOpsMonitoringCenter from './pages/MLOpsMonitoringCenter';
+  return children;
+};
 
-// ─── Phase-11 Step-1: Enterprise AI Operations Command Center ───
-import AIOperationsDashboard from './pages/AIOperationsDashboard';
+// Admin route wrapper
+const AdminOnly = ({ children }) => {
+  const { user } = useAuth();
+  if (user?.role !== 'admin') {
+    return <Navigate to="/dashboard" replace />;
+  }
+  return children;
+};
 
-// ─── Phase-11 Step-2: Enterprise Model Deployment Center ───
-import ModelDeploymentCenter from './pages/ModelDeploymentCenter';
-
-// ─── Phase-11 Step-3: Enterprise Model Version Comparison Center ───
-import ModelComparisonCenter from './pages/ModelComparisonCenter';
-
-// ─── Phase-11 Step-4: Enterprise Experiment Tracking Center ───
-import ExperimentTrackingCenter from './pages/ExperimentTrackingCenter';
-
-// ─── Phase-11 Step-5: Enterprise Scheduled Retraining Manager ───
-import RetrainingManager from './pages/RetrainingManager';
-
-// ─── Phase-11 Step-6: Enterprise Automated ML Pipeline Orchestrator ───
-import PipelineOrchestrator from './pages/PipelineOrchestrator';
-
-// ─── Phase-11 Step-7: Enterprise AI Governance & Compliance Center ───
-import GovernanceCenter from './pages/GovernanceCenter';
-
-const App = () => {
-  const { isAuthenticated } = useAuth();
+function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
   const closeSidebar = () => setIsSidebarOpen(false);
 
-  // Layout wrapper for authenticated pages
-  const AuthenticatedLayout = ({ children }) => (
-    <div className="flex h-screen w-full overflow-hidden bg-surface-950 bg-mesh relative">
-      {/* Decorative background blurs */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary-500/10 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary-500/10 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
-
-      <Sidebar isOpen={isSidebarOpen} closeSidebar={closeSidebar} />
-
-      <div className="flex flex-1 flex-col h-full w-full overflow-hidden md:pl-0">
-        <Navbar toggleSidebar={toggleSidebar} />
-
-        <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-6 lg:p-8 custom-scrollbar">
-          <div className="max-w-7xl mx-auto h-full">
-            {children}
-          </div>
-        </main>
-      </div>
-    </div>
-  );
+  const layoutProps = { isSidebarOpen, toggleSidebar, closeSidebar };
 
   return (
-    <>
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          style: {
-            background: '#1e293b',
-            color: '#fff',
-            border: '1px solid rgba(255,255,255,0.1)',
-            backdropFilter: 'blur(10px)',
-          },
-          success: {
-            iconTheme: {
-              primary: '#10b981',
-              secondary: '#fff',
-            },
-          },
-        }}
-      />
+    <Routes>
+      {/* Public Routes */}
+      <Route path="/login" element={<Suspense fallback={<PageFallback />}><Login /></Suspense>} />
+      <Route path="/signup" element={<Suspense fallback={<PageFallback />}><Signup /></Suspense>} />
 
-      <Routes>
-        {/* Public Routes */}
-        <Route
-          path="/login"
-          element={isAuthenticated ? <Navigate to="/" replace /> : <Login />}
-        />
-        <Route
-          path="/signup"
-          element={isAuthenticated ? <Navigate to="/" replace /> : <Signup />}
-        />
-
-        {/* Protected Routes */}
-        <Route path="/" element={
+      {/* Protected Main User Routes */}
+      <Route
+        path="/dashboard"
+        element={
           <ProtectedRoute>
-            <AuthenticatedLayout>
+            <AuthenticatedLayout {...layoutProps}>
               <Dashboard />
             </AuthenticatedLayout>
           </ProtectedRoute>
-        } />
-        <Route path="/predict" element={
+        }
+      />
+      <Route
+        path="/predict"
+        element={
           <ProtectedRoute>
-            <AuthenticatedLayout>
+            <AuthenticatedLayout {...layoutProps}>
               <Predict />
             </AuthenticatedLayout>
           </ProtectedRoute>
-        } />
-        <Route path="/history" element={
+        }
+      />
+      <Route
+        path="/disease-detection"
+        element={
           <ProtectedRoute>
-            <AuthenticatedLayout>
-              <History />
-            </AuthenticatedLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/analytics" element={
-          <ProtectedRoute>
-            <AuthenticatedLayout>
-              <Analytics />
-            </AuthenticatedLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/disease-detection" element={
-          <ProtectedRoute>
-            <AuthenticatedLayout>
+            <AuthenticatedLayout {...layoutProps}>
               <DiseaseDetection />
             </AuthenticatedLayout>
           </ProtectedRoute>
-        } />
-        <Route
-          path="/admin/feedback"
-          element={
-            <ProtectedRoute>
-              <AdminOnly>
-                <AuthenticatedLayout>
-                  <AdminFeedback />
-                </AuthenticatedLayout>
-              </AdminOnly>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/dashboard"
-          element={
-            <ProtectedRoute>
-              <AdminOnly>
-                <AuthenticatedLayout>
-                  <AIOperationsDashboard />
-                </AuthenticatedLayout>
-              </AdminOnly>
-            </ProtectedRoute>
-          }
-        />
-        {/* Phase-6 Step-1: Model Registry */}
-        <Route
-          path="/admin/model-registry"
-          element={
-            <ProtectedRoute>
-              <AdminOnly>
-                <AuthenticatedLayout>
-                  <ModelRegistry />
-                </AuthenticatedLayout>
-              </AdminOnly>
-            </ProtectedRoute>
-          }
-        />
-        {/* Phase-7 Step-1: Model Performance Dashboard */}
-        <Route
-          path="/admin/model-performance"
-          element={
-            <ProtectedRoute>
-              <AdminOnly>
-                <AuthenticatedLayout>
-                  <ModelDashboard />
-                </AuthenticatedLayout>
-              </AdminOnly>
-            </ProtectedRoute>
-          }
-        />
+        }
+      />
+      <Route
+        path="/history"
+        element={
+          <ProtectedRoute>
+            <AuthenticatedLayout {...layoutProps}>
+              <History />
+            </AuthenticatedLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/analytics"
+        element={
+          <ProtectedRoute>
+            <AuthenticatedLayout {...layoutProps}>
+              <Analytics />
+            </AuthenticatedLayout>
+          </ProtectedRoute>
+        }
+      />
 
-        {/* Phase-9 Step-1: Explainability Analytics Dashboard */}
-        <Route
-          path="/admin/explainability"
-          element={
-            <ProtectedRoute>
-              <AdminOnly>
-                <AuthenticatedLayout>
-                  <ExplainabilityAnalytics />
-                </AuthenticatedLayout>
-              </AdminOnly>
-            </ProtectedRoute>
-          }
-        />
+      {/* Phase 12.8 Expansion Pack Routes */}
+      <Route
+        path="/yield-prediction"
+        element={
+          <ProtectedRoute>
+            <AuthenticatedLayout {...layoutProps}>
+              <YieldPredictionPage />
+            </AuthenticatedLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/assistant"
+        element={
+          <ProtectedRoute>
+            <AuthenticatedLayout {...layoutProps}>
+              <FarmerAssistantPage />
+            </AuthenticatedLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/disease-heatmap"
+        element={
+          <ProtectedRoute>
+            <AuthenticatedLayout {...layoutProps}>
+              <DiseaseHeatmapPage />
+            </AuthenticatedLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/crop-calendar"
+        element={
+          <ProtectedRoute>
+            <AuthenticatedLayout {...layoutProps}>
+              <CropCalendarPage />
+            </AuthenticatedLayout>
+          </ProtectedRoute>
+        }
+      />
 
-        {/* Phase-9 Step-2: Explainability Prediction Explorer */}
-        <Route
-          path="/admin/explainability/predictions"
-          element={
-            <ProtectedRoute>
-              <AdminOnly>
-                <AuthenticatedLayout>
-                  <ExplainabilityPredictionExplorer />
-                </AuthenticatedLayout>
-              </AdminOnly>
-            </ProtectedRoute>
-          }
-        />
+      {/* Protected Admin MLOps Routes */}
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <AdminOnly>
+              <AuthenticatedLayout {...layoutProps}>
+                <AdminDashboard />
+              </AuthenticatedLayout>
+            </AdminOnly>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/operations"
+        element={
+          <ProtectedRoute>
+            <AdminOnly>
+              <AuthenticatedLayout {...layoutProps}>
+                <AIOperationsDashboard />
+              </AuthenticatedLayout>
+            </AdminOnly>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/deployments"
+        element={
+          <ProtectedRoute>
+            <AdminOnly>
+              <AuthenticatedLayout {...layoutProps}>
+                <ModelDeploymentCenter />
+              </AuthenticatedLayout>
+            </AdminOnly>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/model-registry"
+        element={
+          <ProtectedRoute>
+            <AdminOnly>
+              <AuthenticatedLayout {...layoutProps}>
+                <ModelRegistry />
+              </AuthenticatedLayout>
+            </AdminOnly>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/model-comparison"
+        element={
+          <ProtectedRoute>
+            <AdminOnly>
+              <AuthenticatedLayout {...layoutProps}>
+                <ModelComparisonCenter />
+              </AuthenticatedLayout>
+            </AdminOnly>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/experiments"
+        element={
+          <ProtectedRoute>
+            <AdminOnly>
+              <AuthenticatedLayout {...layoutProps}>
+                <ExperimentTrackingCenter />
+              </AuthenticatedLayout>
+            </AdminOnly>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/retraining-manager"
+        element={
+          <ProtectedRoute>
+            <AdminOnly>
+              <AuthenticatedLayout {...layoutProps}>
+                <RetrainingManager />
+              </AuthenticatedLayout>
+            </AdminOnly>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/pipeline-orchestrator"
+        element={
+          <ProtectedRoute>
+            <AdminOnly>
+              <AuthenticatedLayout {...layoutProps}>
+                <PipelineOrchestrator />
+              </AuthenticatedLayout>
+            </AdminOnly>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/governance"
+        element={
+          <ProtectedRoute>
+            <AdminOnly>
+              <AuthenticatedLayout {...layoutProps}>
+                <GovernanceCenter />
+              </AuthenticatedLayout>
+            </AdminOnly>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/observability"
+        element={
+          <ProtectedRoute>
+            <AdminOnly>
+              <AuthenticatedLayout {...layoutProps}>
+                <ObservabilityCenter />
+              </AuthenticatedLayout>
+            </AdminOnly>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/system-monitoring"
+        element={
+          <ProtectedRoute>
+            <AdminOnly>
+              <AuthenticatedLayout {...layoutProps}>
+                <ObservabilityCenter />
+              </AuthenticatedLayout>
+            </AdminOnly>
+          </ProtectedRoute>
+        }
+      />
 
-        {/* Phase-9 Step-3: Explainability Prediction Detail Inspector */}
-        <Route
-          path="/admin/explainability/details/:predictionId"
-          element={
-            <ProtectedRoute>
-              <AdminOnly>
-                <AuthenticatedLayout>
-                  <ExplainabilityDetail />
-                </AuthenticatedLayout>
-              </AdminOnly>
-            </ProtectedRoute>
-          }
-        />
+      <Route
+        path="/admin/model-dashboard"
+        element={
+          <ProtectedRoute>
+            <AdminOnly>
+              <AuthenticatedLayout {...layoutProps}>
+                <ModelDashboard />
+              </AuthenticatedLayout>
+            </AdminOnly>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/explainability"
+        element={
+          <ProtectedRoute>
+            <AdminOnly>
+              <AuthenticatedLayout {...layoutProps}>
+                <ExplainabilityAnalytics />
+              </AuthenticatedLayout>
+            </AdminOnly>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/explainability/predictions"
+        element={
+          <ProtectedRoute>
+            <AdminOnly>
+              <AuthenticatedLayout {...layoutProps}>
+                <ExplainabilityPredictionExplorer />
+              </AuthenticatedLayout>
+            </AdminOnly>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/explainability/detail/:id"
+        element={
+          <ProtectedRoute>
+            <AdminOnly>
+              <AuthenticatedLayout {...layoutProps}>
+                <ExplainabilityDetail />
+              </AuthenticatedLayout>
+            </AdminOnly>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/explainability/reports"
+        element={
+          <ProtectedRoute>
+            <AdminOnly>
+              <AuthenticatedLayout {...layoutProps}>
+                <ExplainabilityReports />
+              </AuthenticatedLayout>
+            </AdminOnly>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/model-performance"
+        element={
+          <ProtectedRoute>
+            <AdminOnly>
+              <AuthenticatedLayout {...layoutProps}>
+                <ExplainabilityAnalytics />
+              </AuthenticatedLayout>
+            </AdminOnly>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/model-health"
+        element={
+          <ProtectedRoute>
+            <AdminOnly>
+              <AuthenticatedLayout {...layoutProps}>
+                <ModelHealthDashboard />
+              </AuthenticatedLayout>
+            </AdminOnly>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/data-drift"
+        element={
+          <ProtectedRoute>
+            <AdminOnly>
+              <AuthenticatedLayout {...layoutProps}>
+                <DataDriftDashboard />
+              </AuthenticatedLayout>
+            </AdminOnly>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/feature-drift"
+        element={
+          <ProtectedRoute>
+            <AdminOnly>
+              <AuthenticatedLayout {...layoutProps}>
+                <FeatureDriftDashboard />
+              </AuthenticatedLayout>
+            </AdminOnly>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/confidence-drift"
+        element={
+          <ProtectedRoute>
+            <AdminOnly>
+              <AuthenticatedLayout {...layoutProps}>
+                <ConfidenceDriftDashboard />
+              </AuthenticatedLayout>
+            </AdminOnly>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/retraining"
+        element={
+          <ProtectedRoute>
+            <AdminOnly>
+              <AuthenticatedLayout {...layoutProps}>
+                <RetrainingRecommendationDashboard />
+              </AuthenticatedLayout>
+            </AdminOnly>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/mlops-monitoring"
+        element={
+          <ProtectedRoute>
+            <AdminOnly>
+              <AuthenticatedLayout {...layoutProps}>
+                <MLOpsMonitoringCenter />
+              </AuthenticatedLayout>
+            </AdminOnly>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/feedback"
+        element={
+          <ProtectedRoute>
+            <AdminOnly>
+              <AuthenticatedLayout {...layoutProps}>
+                <AdminFeedback />
+              </AuthenticatedLayout>
+            </AdminOnly>
+          </ProtectedRoute>
+        }
+      />
 
-        {/* Phase-9 Step-4: Explainability Reporting & Export Center */}
-        <Route
-          path="/admin/explainability/reports"
-          element={
-            <ProtectedRoute>
-              <AdminOnly>
-                <AuthenticatedLayout>
-                  <ExplainabilityReports />
-                </AuthenticatedLayout>
-              </AdminOnly>
-            </ProtectedRoute>
-          }
-        />
+      {/* Profile & Settings Routes */}
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <AuthenticatedLayout {...layoutProps}>
+              <ProfilePage />
+            </AuthenticatedLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <AuthenticatedLayout {...layoutProps}>
+              <SettingsPage />
+            </AuthenticatedLayout>
+          </ProtectedRoute>
+        }
+      />
 
-        {/* Phase-10 Step-1: Enterprise Model Health Dashboard */}
-        <Route
-          path="/admin/model-health"
-          element={
-            <ProtectedRoute>
-              <AdminOnly>
-                <AuthenticatedLayout>
-                  <ModelHealthDashboard />
-                </AuthenticatedLayout>
-              </AdminOnly>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Phase-10 Step-2: Enterprise Data Drift Detection */}
-        <Route
-          path="/admin/data-drift"
-          element={
-            <ProtectedRoute>
-              <AdminOnly>
-                <AuthenticatedLayout>
-                  <DataDriftDashboard />
-                </AuthenticatedLayout>
-              </AdminOnly>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Phase-10 Step-3: Enterprise Feature Drift Analytics */}
-        <Route
-          path="/admin/feature-drift"
-          element={
-            <ProtectedRoute>
-              <AdminOnly>
-                <AuthenticatedLayout>
-                  <FeatureDriftDashboard />
-                </AuthenticatedLayout>
-              </AdminOnly>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Phase-10 Step-4: Enterprise Confidence Drift Monitoring */}
-        <Route
-          path="/admin/confidence-drift"
-          element={
-            <ProtectedRoute>
-              <AdminOnly>
-                <AuthenticatedLayout>
-                  <ConfidenceDriftDashboard />
-                </AuthenticatedLayout>
-              </AdminOnly>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Phase-10 Step-5: Enterprise Retraining Recommendation Engine */}
-        <Route
-          path="/admin/retraining"
-          element={
-            <ProtectedRoute>
-              <AdminOnly>
-                <AuthenticatedLayout>
-                  <RetrainingRecommendationDashboard />
-                </AuthenticatedLayout>
-              </AdminOnly>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Phase-10 Step-6: Enterprise Drift History, Smart Alerts & Monitoring Center */}
-        <Route
-          path="/admin/mlops-monitoring"
-          element={
-            <ProtectedRoute>
-              <AdminOnly>
-                <AuthenticatedLayout>
-                  <MLOpsMonitoringCenter />
-                </AuthenticatedLayout>
-              </AdminOnly>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Phase-11 Step-1: Enterprise AI Operations Command Center */}
-        <Route
-          path="/admin/operations"
-          element={
-            <ProtectedRoute>
-              <AdminOnly>
-                <AuthenticatedLayout>
-                  <AIOperationsDashboard />
-                </AuthenticatedLayout>
-              </AdminOnly>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Phase-11 Step-2: Enterprise Model Deployment Center */}
-        <Route
-          path="/admin/deployments"
-          element={
-            <ProtectedRoute>
-              <AdminOnly>
-                <AuthenticatedLayout>
-                  <ModelDeploymentCenter />
-                </AuthenticatedLayout>
-              </AdminOnly>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Phase-11 Step-3: Enterprise Model Version Comparison Center */}
-        <Route
-          path="/admin/model-comparison"
-          element={
-            <ProtectedRoute>
-              <AdminOnly>
-                <AuthenticatedLayout>
-                  <ModelComparisonCenter />
-                </AuthenticatedLayout>
-              </AdminOnly>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Phase-11 Step-4: Enterprise Experiment Tracking Center */}
-        <Route
-          path="/admin/experiments"
-          element={
-            <ProtectedRoute>
-              <AdminOnly>
-                <AuthenticatedLayout>
-                  <ExperimentTrackingCenter />
-                </AuthenticatedLayout>
-              </AdminOnly>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Phase-11 Step-5: Enterprise Scheduled Retraining Manager */}
-        <Route
-          path="/admin/retraining-manager"
-          element={
-            <ProtectedRoute>
-              <AdminOnly>
-                <AuthenticatedLayout>
-                  <RetrainingManager />
-                </AuthenticatedLayout>
-              </AdminOnly>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Phase-11 Step-6: Enterprise Automated ML Pipeline Orchestrator */}
-        <Route
-          path="/admin/pipeline-orchestrator"
-          element={
-            <ProtectedRoute>
-              <AdminOnly>
-                <AuthenticatedLayout>
-                  <PipelineOrchestrator />
-                </AuthenticatedLayout>
-              </AdminOnly>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/pipeline"
-          element={
-            <ProtectedRoute>
-              <AdminOnly>
-                <AuthenticatedLayout>
-                  <PipelineOrchestrator />
-                </AuthenticatedLayout>
-              </AdminOnly>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Phase-11 Step-7: Enterprise AI Governance & Compliance Center */}
-        <Route
-          path="/admin/governance"
-          element={
-            <ProtectedRoute>
-              <AdminOnly>
-                <AuthenticatedLayout>
-                  <GovernanceCenter />
-                </AuthenticatedLayout>
-              </AdminOnly>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Catch all */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </>
+      {/* Root Redirect */}
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+    </Routes>
   );
-};
+}
 
 export default App;

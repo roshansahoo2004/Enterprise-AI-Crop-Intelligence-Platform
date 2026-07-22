@@ -143,11 +143,12 @@ router.post('/login', [
   }
 });
 
+const auth = require('../middleware/auth');
+
 /**
  * GET /api/auth/me
  * Get current user profile
  */
-const auth = require('../middleware/auth');
 router.get('/me', auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
@@ -170,4 +171,44 @@ router.get('/me', auth, async (req, res) => {
   }
 });
 
+/**
+ * PUT /api/auth/profile
+ * Update current user profile
+ */
+router.put('/profile', auth, async (req, res) => {
+  try {
+    const { name, locationName, preferredCrop, farmSize, soilType } = req.body;
+    const user = await User.findById(req.user.id);
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    if (name) user.name = name;
+    if (locationName) user.location = { ...user.location, name: locationName };
+    if (preferredCrop) user.preferredCrop = preferredCrop;
+    if (farmSize) user.farmSize = farmSize;
+    if (soilType) user.soilType = soilType;
+
+    await user.save();
+
+    res.json({
+      success: true,
+      message: 'Profile updated successfully',
+      data: { user: user.toJSON() }
+    });
+  } catch (error) {
+    console.error('Update profile error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error during profile update'
+    });
+  }
+});
+
 module.exports = router;
+
+

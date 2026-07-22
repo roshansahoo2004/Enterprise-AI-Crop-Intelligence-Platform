@@ -1,6 +1,6 @@
 /**
- * Phase 12 - Step 3: Global Enterprise Design System Barrel Export
- * Exports all reusable UI components, skeletons, empty states, error states, and buttons.
+ * Phase 12 - Step 4: Global Enterprise Design System Barrel Export
+ * Exports all reusable UI components, skeletons, empty states, error states, confirmation modals, and buttons.
  */
 
 export { PageContainer } from './PageContainer';
@@ -12,6 +12,7 @@ export { SearchBar, FilterBar } from './FilterBar';
 export { DataTable } from './DataTable';
 export { EmptyState } from './EmptyState';
 export { ErrorState } from './ErrorState';
+export { ConfirmModal } from './ConfirmModal';
 export {
   SkeletonCard,
   SkeletonTable,

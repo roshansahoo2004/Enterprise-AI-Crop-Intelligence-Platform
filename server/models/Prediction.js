@@ -163,7 +163,10 @@ const predictionSchema = new mongoose.Schema({
   }
 });
 
-// Index for efficient querying by user and date
+// Index for efficient querying by user, date, type, and pathology analytics
 predictionSchema.index({ userId: 1, createdAt: -1 });
+predictionSchema.index({ predictionType: 1, createdAt: -1 });
+predictionSchema.index({ disease: 1, createdAt: -1 });
 
 module.exports = mongoose.model('Prediction', predictionSchema);
+

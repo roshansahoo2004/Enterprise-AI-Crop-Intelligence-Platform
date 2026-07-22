@@ -32,11 +32,30 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user'
   },
+  // Optional saved location for weather/context when browser geolocation is unavailable
+  location: {
+    lat: { type: Number, default: null },
+    lon: { type: Number, default: null },
+    name: { type: String, default: 'Punjab, India' }
+  },
+  preferredCrop: {
+    type: String,
+    default: 'Wheat'
+  },
+  farmSize: {
+    type: String,
+    default: '5.2 Hectares'
+  },
+  soilType: {
+    type: String,
+    default: 'Loamy Soil'
+  },
   createdAt: {
     type: Date,
     default: Date.now
   }
 });
+
 
 // Hash password before saving
 userSchema.pre('save', async function (next) {
