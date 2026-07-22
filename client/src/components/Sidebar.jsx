@@ -25,7 +25,8 @@ import {
   FiRadio,
   FiTv,
   FiSend,
-  FiRepeat
+  FiRepeat,
+  FiGitBranch
 } from 'react-icons/fi';
 
 const Sidebar = ({ isOpen, closeSidebar }) => {
@@ -80,6 +81,18 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
           name: 'Retraining Manager',
           path: '/admin/retraining-manager',
           icon: <FiRepeat className="h-5 w-5" />
+        },
+        // ─── Phase-11 Step-6: Enterprise Automated ML Pipeline Orchestrator ───
+        {
+          name: 'Pipeline Orchestrator',
+          path: '/admin/pipeline-orchestrator',
+          icon: <FiGitBranch className="h-5 w-5" />
+        },
+        // ─── Phase-11 Step-7: Enterprise AI Governance & Compliance Center ───
+        {
+          name: 'Governance',
+          path: '/admin/governance',
+          icon: <FiShield className="h-5 w-5" />
         },
         // ─── Phase-7 Step-1: Model Performance Dashboard ───
         {

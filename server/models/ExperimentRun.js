@@ -6,6 +6,14 @@ const mongoose = require('mongoose');
  * Tracks every model training experiment run, including hyperparameters,
  * training & validation metrics, status, duration, dataset versions, and artifacts.
  */
+
+const artifactSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  type: { type: String, default: 'Artifact' },
+  path: { type: String, required: true },
+  sizeKb: { type: Number, default: 0 }
+}, { _id: false });
+
 const experimentRunSchema = new mongoose.Schema({
   experimentId: {
     type: String,
@@ -137,14 +145,9 @@ const experimentRunSchema = new mongoose.Schema({
     type: String,
     default: 'Hyperparameter tuning experiment'
   },
-  artifacts: [{
-    name: String,
-    type: String,
-    path: String,
-    sizeKb: Number
-  }]
+  artifacts: [artifactSchema]
 }, {
   timestamps: true
 });
 
-module.exports = mongoose.model('ExperimentRun', experimentRunSchema);
+module.exports = mongoose.models.ExperimentRun || mongoose.model('ExperimentRun', experimentRunSchema);

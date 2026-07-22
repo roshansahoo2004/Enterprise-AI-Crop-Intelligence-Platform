@@ -70,6 +70,12 @@ const experimentTrackingRoutes = require('./routes/experimentTracking');
 // ─── Phase-11 Step-5: Enterprise Scheduled Retraining Manager ───
 const retrainingSchedulerRoutes = require('./routes/retrainingScheduler');
 
+// ─── Phase-11 Step-6: Enterprise Automated ML Pipeline Orchestrator ───
+const pipelineWorkflowRoutes = require('./routes/pipelineWorkflow');
+
+// ─── Phase-11 Step-7: Enterprise AI Governance & Compliance Center ───
+const governanceRoutes = require('./routes/governance');
+
 // Initialize Express app
 const app = express();
 
@@ -121,6 +127,8 @@ app.use('/api/admin/deployments', modelDeploymentRoutes);
 app.use('/api/admin/model-comparison', modelComparisonRoutes);
 app.use('/api/admin/experiments', experimentTrackingRoutes);
 app.use('/api/admin/retraining-manager', retrainingSchedulerRoutes);
+app.use('/api/admin/pipeline', pipelineWorkflowRoutes);
+app.use('/api/admin/governance', governanceRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

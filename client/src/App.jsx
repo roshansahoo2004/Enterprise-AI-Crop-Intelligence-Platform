@@ -71,6 +71,12 @@ import ExperimentTrackingCenter from './pages/ExperimentTrackingCenter';
 // ─── Phase-11 Step-5: Enterprise Scheduled Retraining Manager ───
 import RetrainingManager from './pages/RetrainingManager';
 
+// ─── Phase-11 Step-6: Enterprise Automated ML Pipeline Orchestrator ───
+import PipelineOrchestrator from './pages/PipelineOrchestrator';
+
+// ─── Phase-11 Step-7: Enterprise AI Governance & Compliance Center ───
+import GovernanceCenter from './pages/GovernanceCenter';
+
 const App = () => {
   const { isAuthenticated } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -421,6 +427,46 @@ const App = () => {
               <AdminOnly>
                 <AuthenticatedLayout>
                   <RetrainingManager />
+                </AuthenticatedLayout>
+              </AdminOnly>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Phase-11 Step-6: Enterprise Automated ML Pipeline Orchestrator */}
+        <Route
+          path="/admin/pipeline-orchestrator"
+          element={
+            <ProtectedRoute>
+              <AdminOnly>
+                <AuthenticatedLayout>
+                  <PipelineOrchestrator />
+                </AuthenticatedLayout>
+              </AdminOnly>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/pipeline"
+          element={
+            <ProtectedRoute>
+              <AdminOnly>
+                <AuthenticatedLayout>
+                  <PipelineOrchestrator />
+                </AuthenticatedLayout>
+              </AdminOnly>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Phase-11 Step-7: Enterprise AI Governance & Compliance Center */}
+        <Route
+          path="/admin/governance"
+          element={
+            <ProtectedRoute>
+              <AdminOnly>
+                <AuthenticatedLayout>
+                  <GovernanceCenter />
                 </AuthenticatedLayout>
               </AdminOnly>
             </ProtectedRoute>
