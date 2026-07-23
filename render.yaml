@@ -1,8 +1,0 @@
-services:
-  - type: web
-    name: enterprise-ai-crop-backend
-    runtime: python
-    pythonVersion: "3.11"
-    rootDir: server
-    buildCommand: pip install -r ../deep-learning/requirements.txt && pip install -r ../ml/requirements.txt && npm install
-    startCommand: node server.js
