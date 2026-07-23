@@ -74,5 +74,6 @@ module.exports = {
   loadActiveModel,
   reloadActiveModel,
   getModel,
-  getStatus
+  getStatus,
+  incrementPredictionCount
 };

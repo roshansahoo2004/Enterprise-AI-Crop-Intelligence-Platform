@@ -45,26 +45,31 @@ __pycache__/
 *.pyo
 *.pyd
 *.egg-info/
+
+# Virtual environments - ignore karo (bohot badi hoti hain)
+tf-gpu/
+tf-gpu311/
 .venv/
 venv/
 
 # =========================
-# ML Models
+# ML Models - Heavy files ignore, small files push
 # =========================
+# Deep learning model (100MB+) - ignore
 *.h5
 *.keras
 *.pt
 *.pth
 *.onnx
 *.ckpt
-*.pkl
-*.pickle
-*.joblib
-deep-learning/models/*.h5
 deep-learning/models/model_versions/
+deep-learning/models/training_history*.png
+
+# NOTE: *.pkl files PUSH karni hain (best_model.pkl, scaler.pkl etc.)
+# isliye *.pkl yahan nahi hai
 
 # =========================
-# Dataset
+# Dataset - bohot bada hai, ignore karo
 # =========================
 dataset/
 deep-learning/dataset/
@@ -104,3 +109,4 @@ coverage/
 # =========================
 *.tmp
 *.temp
+tfdebug.txt

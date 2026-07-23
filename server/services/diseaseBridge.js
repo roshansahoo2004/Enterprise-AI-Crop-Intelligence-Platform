@@ -114,9 +114,15 @@ const predictDisease = async (imagePath) => {
         modelService.incrementPredictionCount();
         resolve(result);
       } catch (parseError) {
-        console.error('Failed to parse DL output:', stdout);
+        console.error("=========== JSON PARSE ERROR ===========");
+        console.error(parseError);
+        console.error("STDOUT RAW:");
+        console.log(JSON.stringify(stdout));
+        console.error("STDERR RAW:");
+        console.log(JSON.stringify(stderr));
+
         resolve({
-          error: 'Failed to parse Deep Learning model output'
+          error: parseError.message
         });
       }
     });

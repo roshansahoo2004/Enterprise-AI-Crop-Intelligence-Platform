@@ -83,6 +83,66 @@ router.post('/register', [
  * POST /api/auth/login
  * Login existing user
  */
+// router.post('/login', [
+//   body('email')
+//     .isEmail()
+//     .normalizeEmail()
+//     .withMessage('Please provide a valid email'),
+//   body('password')
+//     .notEmpty()
+//     .withMessage('Password is required')
+// ], async (req, res) => {
+//   try {
+//     // Validate input
+//     const errors = validationResult(req);
+//     if (!errors.isEmpty()) {
+//       return res.status(400).json({
+//         success: false,
+//         message: 'Validation failed',
+//         errors: errors.array()
+//       });
+//     }
+
+//     const { email, password } = req.body;
+
+//     // Find user
+//     const user = await User.findOne({ email });
+//     if (!user) {
+//       return res.status(401).json({
+//         success: false,
+//         message: 'Invalid email or password'
+//       });
+//     }
+
+//     // Compare password
+//     const isMatch = await user.comparePassword(password);
+//     if (!isMatch) {
+//       return res.status(401).json({
+//         success: false,
+//         message: 'Invalid email or password'
+//       });
+//     }
+
+//     // Generate token
+//     const token = generateToken(user);
+
+//     res.json({
+//       success: true,
+//       message: 'Login successful',
+//       data: {
+//         user: user.toJSON(),
+//         token
+//       }
+//     });
+//   } catch (error) {
+//     console.error('Login error:', error);
+//     res.status(500).json({
+//       success: false,
+//       message: 'Server error during login'
+//     });
+//   }
+// });
+
 router.post('/login', [
   body('email')
     .isEmail()
@@ -93,9 +153,10 @@ router.post('/login', [
     .withMessage('Password is required')
 ], async (req, res) => {
   try {
-    // Validate input
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log("Validation Errors:", errors.array());
+
       return res.status(400).json({
         success: false,
         message: 'Validation failed',
@@ -105,25 +166,39 @@ router.post('/login', [
 
     const { email, password } = req.body;
 
-    // Find user
+    console.log("==================================");
+    console.log("Login Email:", email);
+
     const user = await User.findOne({ email });
+
+    console.log("User Found:", !!user);
+
     if (!user) {
+      console.log("❌ User not found");
       return res.status(401).json({
         success: false,
         message: 'Invalid email or password'
       });
     }
 
-    // Compare password
+    console.log("Stored Hash:", user.password);
+
     const isMatch = await user.comparePassword(password);
+
+    console.log("Entered Password:", password);
+    console.log("Password Match:", isMatch);
+
     if (!isMatch) {
+      console.log("❌ Password mismatch");
+
       return res.status(401).json({
         success: false,
         message: 'Invalid email or password'
       });
     }
 
-    // Generate token
+    console.log("✅ Login Success");
+
     const token = generateToken(user);
 
     res.json({
@@ -134,8 +209,10 @@ router.post('/login', [
         token
       }
     });
+
   } catch (error) {
-    console.error('Login error:', error);
+    console.error("LOGIN ERROR:", error);
+
     res.status(500).json({
       success: false,
       message: 'Server error during login'
@@ -179,7 +256,7 @@ router.put('/profile', auth, async (req, res) => {
   try {
     const { name, locationName, preferredCrop, farmSize, soilType } = req.body;
     const user = await User.findById(req.user.id);
-    
+
     if (!user) {
       return res.status(404).json({
         success: false,
