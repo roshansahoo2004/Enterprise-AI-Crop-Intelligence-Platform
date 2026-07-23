@@ -60,13 +60,14 @@ venv/
 *.pkl
 *.pickle
 *.joblib
+deep-learning/models/*.h5
+deep-learning/models/model_versions/
 
 # =========================
 # Dataset
 # =========================
 dataset/
-deep-learning/
-ml/
+deep-learning/dataset/
 
 # =========================
 # Uploads
