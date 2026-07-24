@@ -75,7 +75,7 @@ const predictDisease = async (imagePath) => {
     }
 
     const python = spawn(pythonCmd, args, {
-      timeout: 45000, // 45 second timeout (DL models take longer to load sometimes)
+      timeout: 180000, // 45 second timeout (DL models take longer to load sometimes)
     });
 
     let stdout = '';
