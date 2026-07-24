@@ -122,7 +122,9 @@ def load_model_and_classes(model_path=None):
     if not os.path.exists(METADATA_PATH):
         raise FileNotFoundError(f"Class metadata not found at {METADATA_PATH}. Please train the model first.")
 
+    print("Loading model...", flush=True)
     model = tf.keras.models.load_model(resolved_path)
+    print("Model loaded.", flush=True)
 
     with open(METADATA_PATH, 'r') as f:
         meta_data = json.load(f)
@@ -167,15 +169,23 @@ def predict(image_path, model_path=None):
         model_path:  Optional absolute path to a .h5 model file.
     """
     try:
+        print("STEP 1", flush=True)
+        
         model, labels_dict, model_name = load_model_and_classes(model_path)
+        
+        print("STEP 2", flush=True)
 
         # Preprocess using the same pipeline as training
         img_array = preprocess_image_for_prediction(image_path, model_name=model_name)
+        print("STEP 3", flush=True)
+
         if img_array is None:
             raise ValueError(f"Failed to process image at {image_path}")
 
         # Predict
         predictions = model.predict(img_array, verbose=0)[0]
+        print("STEP 4", flush=True)
+
         predicted_class_idx = str(np.argmax(predictions))
         confidence = float(np.max(predictions)) * 100
 
@@ -193,6 +203,7 @@ def predict(image_path, model_path=None):
             "severity": disease_info["severity"],
             "treatment": disease_info["treatment"]
         }
+        print("STEP 5", flush=True)
 
         return result
 
