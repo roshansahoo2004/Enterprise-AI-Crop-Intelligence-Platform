@@ -169,22 +169,22 @@ def predict(image_path, model_path=None):
         model_path:  Optional absolute path to a .h5 model file.
     """
     try:
-        print("STEP 1", flush=True)
+        print("STEP 1", file=sys.stderr)
         
         model, labels_dict, model_name = load_model_and_classes(model_path)
         
-        print("STEP 2", flush=True)
+        print("STEP 2", file=sys.stderr)
 
         # Preprocess using the same pipeline as training
         img_array = preprocess_image_for_prediction(image_path, model_name=model_name)
-        print("STEP 3", flush=True)
+        print("STEP 3", file=sys.stderr)
 
         if img_array is None:
             raise ValueError(f"Failed to process image at {image_path}")
 
         # Predict
         predictions = model.predict(img_array, verbose=0)[0]
-        print("STEP 4", flush=True)
+        print("STEP 4", file=sys.stderr)
 
         predicted_class_idx = str(np.argmax(predictions))
         confidence = float(np.max(predictions)) * 100
@@ -203,7 +203,7 @@ def predict(image_path, model_path=None):
             "severity": disease_info["severity"],
             "treatment": disease_info["treatment"]
         }
-        print("STEP 5", flush=True)
+        print("STEP 5", file=sys.stderr)
 
         return result
 

@@ -56,12 +56,18 @@ venv/
 # ML Models - Heavy files ignore, small files push
 # =========================
 # Deep learning model (100MB+) - ignore
+# Ignore all model files
 *.h5
 *.keras
 *.pt
 *.pth
 *.onnx
 *.ckpt
+
+# BUT keep the production model
+!deep-learning/models/disease_model.h5
+
+# Ignore experimental versions
 deep-learning/models/model_versions/
 deep-learning/models/training_history*.png
 
