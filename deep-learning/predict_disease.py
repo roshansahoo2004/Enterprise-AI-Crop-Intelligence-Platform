@@ -122,9 +122,9 @@ def load_model_and_classes(model_path=None):
     if not os.path.exists(METADATA_PATH):
         raise FileNotFoundError(f"Class metadata not found at {METADATA_PATH}. Please train the model first.")
 
-    print("Loading model...", flush=True)
+    print("Loading model...", file=sys.stderr)
     model = tf.keras.models.load_model(resolved_path)
-    print("Model loaded.", flush=True)
+    print("Model loaded.", file=sys.stderr)
 
     with open(METADATA_PATH, 'r') as f:
         meta_data = json.load(f)
