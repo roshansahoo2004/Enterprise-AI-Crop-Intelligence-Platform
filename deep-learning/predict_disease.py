@@ -13,6 +13,11 @@ Output:
 """
 
 import os
+
+# Disable GPU + suppress TensorFlow logs
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+
 import sys
 import json
 import numpy as np
