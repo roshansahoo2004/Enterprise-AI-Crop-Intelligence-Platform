@@ -5,6 +5,8 @@ const path = require('path');
 const fs = require('fs');
 const DiseaseReport = require('../models/DiseaseReport');
 const { predictDisease } = require('../services/diseaseBridge');
+const cloudinary = require("../config/cloudinary");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 // ─── Phase-3 Step-4: Dynamic model version for prediction responses ───
 const ModelVersion = require('../models/ModelVersion');
@@ -12,34 +14,46 @@ const ModelVersion = require('../models/ModelVersion');
 const router = express.Router();
 
 // Multer config for image uploads
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const uploadDir = path.join(__dirname, '..', 'uploads');
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     const uploadDir = path.join(__dirname, '..', 'uploads');
+//     if (!fs.existsSync(uploadDir)) {
+//       fs.mkdirSync(uploadDir, { recursive: true });
+//     }
+//     cb(null, uploadDir);
+//   },
+//   filename: function (req, file, cb) {
+//     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+//     cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+//   }
+// });
+
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "crop-ai/disease-images",
+    allowed_formats: ["jpg", "jpeg", "png"],
+    resource_type: "image",
+    public_id: (req, file) => {
+      return `disease-${Date.now()}`;
     }
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
   }
 });
 
-const upload = multer({ 
-    storage: storage,
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
-    fileFilter: (req, file, cb) => {
-        const filetypes = /jpeg|jpg|png/;
-        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-        const mimetype = filetypes.test(file.mimetype);
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  fileFilter: (req, file, cb) => {
+    const filetypes = /jpeg|jpg|png/;
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = filetypes.test(file.mimetype);
 
-        if (mimetype && extname) {
-            return cb(null, true);
-        } else {
-            cb(new Error('Images only (jpeg, jpg, png)!'));
-        }
+    if (mimetype && extname) {
+      return cb(null, true);
+    } else {
+      cb(new Error('Images only (jpeg, jpg, png)!'));
     }
+  }
 });
 
 /**
@@ -52,8 +66,15 @@ router.post('/detect', auth, upload.single('image'), async (req, res) => {
       return res.status(400).json({ success: false, message: 'No image uploaded' });
     }
 
+    // const imagePath = req.file.path;
+    // const imageUrl = `/uploads/${req.file.filename}`;
+
+    console.log("========== REQ.FILE ==========");
+    console.log(req.file);
+    console.log("==============================");
+
     const imagePath = req.file.path;
-    const imageUrl = `/uploads/${req.file.filename}`;
+    const imageUrl = req.file.path;
 
     // Call Python DL script
     const dlResult = await predictDisease(imagePath);
@@ -112,22 +133,22 @@ router.post('/detect', auth, upload.single('image'), async (req, res) => {
  * Fetch previous disease reports
  */
 router.get('/history', auth, async (req, res) => {
-    try {
-        const reports = await DiseaseReport.find({ userId: req.user.id })
-            .sort({ createdAt: -1 })
-            .limit(50);
-            
-        res.json({
-            success: true,
-            data: reports
-        });
-    } catch (error) {
-        console.error('Disease history error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Server error fetching disease history'
-        });
-    }
+  try {
+    const reports = await DiseaseReport.find({ userId: req.user.id })
+      .sort({ createdAt: -1 })
+      .limit(50);
+
+    res.json({
+      success: true,
+      data: reports
+    });
+  } catch (error) {
+    console.error('Disease history error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error fetching disease history'
+    });
+  }
 });
 
 module.exports = router;

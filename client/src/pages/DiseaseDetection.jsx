@@ -3,6 +3,9 @@ import { FiUploadCloud, FiImage, FiActivity, FiCheckCircle, FiAlertTriangle, FiI
 import { diseaseAPI, feedbackAPI } from '../services/api';
 import toast from 'react-hot-toast';
 
+const BACKEND_URL =
+  import.meta.env.VITE_SERVER_ENDPOINT || "http://localhost:5000";
+
 const DiseaseDetection = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -489,10 +492,14 @@ const DiseaseDetection = () => {
             <div key={item._id} className="glass-card overflow-hidden group">
               <div className="h-40 w-full overflow-hidden relative">
                 <img
-                  src={`http://localhost:5000${item.imageUrl}`}
+                  src={`${BACKEND_URL}${item.imageUrl}`}
                   alt={item.disease}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/300?text=Image+Not+Found' }}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src =
+                      "https://via.placeholder.com/300?text=Image+Not+Found";
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                 <div className="absolute bottom-3 left-3 right-3">
