@@ -6,7 +6,6 @@ const fs = require('fs');
 const DiseaseReport = require('../models/DiseaseReport');
 const { predictDisease } = require('../services/diseaseBridge');
 const cloudinary = require("../config/cloudinary");
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 // ─── Phase-3 Step-4: Dynamic model version for prediction responses ───
 const ModelVersion = require('../models/ModelVersion');
@@ -28,16 +27,27 @@ const router = express.Router();
 //   }
 // });
 
-const storage = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: "crop-ai/disease-images",
-    allowed_formats: ["jpg", "jpeg", "png"],
-    resource_type: "image",
-    public_id: (req, file) => {
-      return `disease-${Date.now()}`;
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadDir = path.join(__dirname, "..", "uploads");
+
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
     }
-  }
+
+    cb(null, uploadDir);
+  },
+
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+
+    cb(
+      null,
+      "image-" +
+      uniqueSuffix +
+      path.extname(file.originalname)
+    );
+  },
 });
 
 const upload = multer({
@@ -73,19 +83,40 @@ router.post('/detect', auth, upload.single('image'), async (req, res) => {
     console.log(req.file);
     console.log("==============================");
 
+    // Local uploaded image path
     const imagePath = req.file.path;
-    const imageUrl = req.file.path;
 
-    // Call Python DL script
+    // Run AI Prediction
     const dlResult = await predictDisease(imagePath);
 
     if (dlResult.error) {
       return res.status(500).json({
         success: false,
-        message: 'Disease detection failed',
+        message: "Disease detection failed",
         error: dlResult.error
       });
     }
+
+    // Upload image to Cloudinary
+    const uploadResult = await cloudinary.uploader.upload(imagePath, {
+      folder: "crop-ai/disease-images"
+    });
+
+    const imageUrl = uploadResult.secure_url;
+
+    // Delete local image
+    fs.unlinkSync(imagePath);
+
+    // Call Python DL script
+    // const dlResult = await predictDisease(imagePath);
+
+    // if (dlResult.error) {
+    //   return res.status(500).json({
+    //     success: false,
+    //     message: 'Disease detection failed',
+    //     error: dlResult.error
+    //   });
+    // }
 
     // Save to DB
     const report = new DiseaseReport({
