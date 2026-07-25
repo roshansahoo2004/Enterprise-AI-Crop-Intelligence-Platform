@@ -77,37 +77,7 @@ router.post('/', auth, async (req, res) => {
       });
     }
 
-    let feedbackImage = null;
-    const filename = path.basename(imageUrl);
-    const sourcePath = path.join(__dirname, '..', 'uploads', filename);
-
-    // Archive image logic for Active Learning feedback
-    try {
-      // Check if temporary uploaded image exists on disk
-      await fs.access(sourcePath);
-
-      // Define target directory and create it automatically if it does not exist
-      const targetDir = path.join(__dirname, '..', 'feedback-images');
-      await fs.mkdir(targetDir, { recursive: true });
-
-      // Generate a unique filename using timestamp + random suffix
-      const ext = path.extname(filename);
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-      const uniqueFilename = `feedback-${uniqueSuffix}${ext}`;
-      const destPath = path.join(targetDir, uniqueFilename);
-
-      // Copy (do not move) the uploaded image from uploads/ into feedback-images/
-      await fs.copyFile(sourcePath, destPath);
-
-      // Save the relative web path
-      feedbackImage = `/feedback-images/${uniqueFilename}`;
-    } catch (fsErr) {
-      console.error(`Feedback archive image copy failed from ${sourcePath}. Error:`, fsErr);
-      return res.status(400).json({
-        success: false,
-        message: `Prediction image file could not be found or processed: ${fsErr.message}`
-      });
-    }
+    const feedbackImage = imageUrl;
 
     // Save new feedback
     const feedback = new Feedback({
