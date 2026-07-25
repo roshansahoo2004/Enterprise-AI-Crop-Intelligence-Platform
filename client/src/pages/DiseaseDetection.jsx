@@ -492,7 +492,11 @@ const DiseaseDetection = () => {
             <div key={item._id} className="glass-card overflow-hidden group">
               <div className="h-40 w-full overflow-hidden relative">
                 <img
-                  src={`${BACKEND_URL}${item.imageUrl}`}
+                  src={
+                    item.imageUrl.startsWith("http")
+                      ? item.imageUrl
+                      : `${BACKEND_URL}${item.imageUrl}`
+                  }
                   alt={item.disease}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   onError={(e) => {

@@ -102,6 +102,12 @@ router.post('/detect', auth, upload.single('image'), async (req, res) => {
       folder: "crop-ai/disease-images"
     });
 
+    console.log("========== CLOUDINARY ==========");
+    console.log(uploadResult);
+    console.log("secure_url:", uploadResult.secure_url);
+    console.log("url:", uploadResult.url);
+    console.log("================================");
+
     const imageUrl = uploadResult.secure_url;
 
     // Delete local image
