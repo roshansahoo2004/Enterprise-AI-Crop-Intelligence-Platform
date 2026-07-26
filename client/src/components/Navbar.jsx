@@ -87,7 +87,7 @@ const Navbar = ({ toggleSidebar }) => {
 
           {/* ─── Notification Dropdown Panel ─────────────────────────── */}
           {notifOpen && (
-            <div className="absolute right-0 top-full mt-3 w-96 max-w-[calc(100vw-2rem)] rounded-2xl border border-white/10 bg-surface-900/95 shadow-2xl shadow-black/40 backdrop-blur-xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2">
+            <div className="fixed left-[50%] -translate-x-1/2 top-[5rem] w-[93vw] sm:absolute sm:left-auto sm:translate-x-0 sm:right-0 sm:top-full sm:mt-3 sm:w-96 rounded-2xl border border-white/10 bg-surface-900/95 shadow-2xl shadow-black/40 backdrop-blur-xl z-[9999] overflow-hidden animate-in fade-in slide-in-from-top-2">
               {/* Header */}
               <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
                 <div className="flex items-center gap-2.5">
@@ -122,7 +122,7 @@ const Navbar = ({ toggleSidebar }) => {
               </div>
 
               {/* Notification List */}
-              <div className="max-h-80 overflow-y-auto custom-scrollbar">
+              <div className="max-h-[70vh] sm:max-h-80 overflow-y-auto overscroll-contain scroll-smooth custom-scrollbar">
                 {notifications.length === 0 ? (
                   // ─── Empty State ─────────────────────────────────────
                   <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
@@ -152,7 +152,7 @@ const Navbar = ({ toggleSidebar }) => {
                         {/* Content */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-start justify-between gap-2">
-                            <p className={`text-xs font-semibold truncate ${!notif.read ? 'text-white' : 'text-gray-300'}`}>
+                            <p className={`text-xs font-semibold break-words sm:truncate ${!notif.read ? 'text-white' : 'text-gray-300'}`}>
                               {notif.title}
                             </p>
                             {!notif.read && (
