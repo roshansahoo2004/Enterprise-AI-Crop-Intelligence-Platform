@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { FiUser, FiMail, FiLock, FiArrowRight } from 'react-icons/fi';
 import toast from 'react-hot-toast';
@@ -9,6 +9,16 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Show welcome toast when redirected from Login (account not found)
+  useEffect(() => {
+    if (location.state?.fromLogin) {
+      toast('Create your account to continue.', { icon: '👋' });
+      // Clear the state so toast doesn't reappear on refresh / back-navigation
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 

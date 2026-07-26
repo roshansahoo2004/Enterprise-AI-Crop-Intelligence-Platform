@@ -8,6 +8,7 @@ import { SkeletonCard, SkeletonTable } from './components/ui/LoadingSkeleton';
 // ─── Lazy Loaded Major Page Components ──────────────────────────────────────
 const Login = lazy(() => import('./pages/Login'));
 const Signup = lazy(() => import('./pages/Signup'));
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Predict = lazy(() => import('./pages/Predict'));
 const History = lazy(() => import('./pages/History'));
@@ -122,6 +123,7 @@ function App() {
       {/* Public Routes */}
       <Route path="/login" element={<Suspense fallback={<PageFallback />}><Login /></Suspense>} />
       <Route path="/signup" element={<Suspense fallback={<PageFallback />}><Signup /></Suspense>} />
+      <Route path="/forgot-password" element={<Suspense fallback={<PageFallback />}><ForgotPassword /></Suspense>} />
 
       {/* Protected Main User Routes */}
       <Route

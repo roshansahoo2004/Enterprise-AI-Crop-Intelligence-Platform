@@ -175,9 +175,9 @@ router.post('/login', [
 
     if (!user) {
       console.log("❌ User not found");
-      return res.status(401).json({
+      return res.status(404).json({
         success: false,
-        message: 'Invalid email or password'
+        message: 'Account not found. Please sign up first.'
       });
     }
 
@@ -193,7 +193,7 @@ router.post('/login', [
 
       return res.status(401).json({
         success: false,
-        message: 'Invalid email or password'
+        message: 'Incorrect password. Please try again.'
       });
     }
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { FiMail, FiLock, FiArrowRight } from 'react-icons/fi';
@@ -10,7 +10,16 @@ const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  // Track consecutive wrong-password attempts
+  const failedAttempts = useRef(0);
+
+  const handleChange = (e) => {
+    // Reset attempt counter when email changes so a fresh email gets a fresh count
+    if (e.target.name === 'email') {
+      failedAttempts.current = 0;
+    }
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,10 +27,45 @@ const Login = () => {
     
     try {
       await login(formData.email, formData.password);
+      failedAttempts.current = 0;
       toast.success('Welcome back to AgriSense!');
       navigate('/');
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to login. Please check your credentials.');
+      const status = error.response?.status;
+
+      if (status === 404) {
+        // Account does not exist — redirect to signup with router state
+        toast.error('Account not found. Please sign up first.');
+        setTimeout(() => navigate('/signup', { state: { fromLogin: true } }), 2000);
+      } else if (status === 401) {
+        // Wrong password — escalate message based on attempt count
+        failedAttempts.current += 1;
+        const attempt = failedAttempts.current;
+
+        if (attempt === 1) {
+          toast.error('Incorrect password. Please try again.');
+        } else if (attempt === 2) {
+          toast.error('Still incorrect. Please check your password carefully.');
+        } else {
+          // 3rd+ attempt — show toast with clickable forgot-password link
+          toast.error(
+            (t) => (
+              <div>
+                <p className="font-medium">Incorrect password.</p>
+                <button
+                  onClick={() => { toast.dismiss(t.id); navigate('/forgot-password'); }}
+                  className="mt-1 text-sm text-primary-400 hover:text-primary-300 underline underline-offset-2 transition-colors"
+                >
+                  Forgot your password?
+                </button>
+              </div>
+            ),
+            { duration: 5000 }
+          );
+        }
+      } else {
+        toast.error(error.response?.data?.message || 'Failed to login. Please check your credentials.');
+      }
     } finally {
       setLoading(false);
     }
@@ -65,7 +109,7 @@ const Login = () => {
           <div className="space-y-1">
             <div className="flex justify-between items-center ml-1">
               <label className="text-xs font-medium text-gray-300 uppercase tracking-wider">Password</label>
-              <Link to="#" className="text-xs text-primary-400 hover:text-primary-300">Forgot Password?</Link>
+              <Link to="/forgot-password" className="text-xs text-primary-400 hover:text-primary-300">Forgot Password?</Link>
             </div>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
