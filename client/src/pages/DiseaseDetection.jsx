@@ -81,9 +81,6 @@ const DiseaseDetection = () => {
 
     try {
       const res = await diseaseAPI.detectDisease(formData);
-      console.log("Backend Response:", res.data);
-      console.log("Result:", res.data.data);
-      console.log("Model Version:", res.data.data.modelVersion);
       setResult(res.data.data);
       toast.success('Analysis complete!');
 
