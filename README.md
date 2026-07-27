@@ -88,6 +88,80 @@ graph TD
 
 ---
 
+# 📸 Application Screenshots
+
+## 🏠 Dashboard
+
+<p align="center">
+  <img src="assets/dashboard.png" width="1000"/>
+</p>
+
+---
+
+## 🌾 Crop Prediction
+
+### Input Form
+
+<p align="center">
+  <img src="assets/crop-prediction-form.png" width="1000"/>
+</p>
+
+### Prediction Result
+
+<p align="center">
+  <img src="assets/crop-prediction-result.png" width="1000"/>
+</p>
+
+---
+
+## 🍃 Disease Detection
+
+<p align="center">
+  <img src="assets/disease-detection.png" width="1000"/>
+</p>
+
+---
+
+## 📈 AI Yield Prediction
+
+<p align="center">
+  <img src="assets/yield-prediction.png" width="1000"/>
+</p>
+
+---
+
+## 📊 Analytics Dashboard
+
+<p align="center">
+  <img src="assets/analytics.png" width="1000"/>
+</p>
+
+---
+
+## 🤖 AI Assistant
+
+<p align="center">
+  <img src="assets/ai-assistant.png" width="1000"/>
+</p>
+
+---
+
+## 📜 Prediction History
+
+<p align="center">
+  <img src="assets/prediction-history.png" width="1000"/>
+</p>
+
+---
+
+## 📱 Mobile Responsive UI
+
+<p align="center">
+  <img src="assets/mobile-ui.png" width="350"/>
+</p>
+
+---
+
 ## 📁 Project Structure
 
 ```
