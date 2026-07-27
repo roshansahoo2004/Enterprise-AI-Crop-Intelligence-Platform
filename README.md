@@ -1,6 +1,6 @@
 # 🌾 Enterprise AI Crop Intelligence Platform
 
-> **Release Candidate v1.0** — Production-Grade AI Decision-Support System for Precision Agriculture, Crop Yield Optimization, Disease Diagnostics, and MLOps Lifecycle Governance.
+> **Release Candidate v1.0** — > 🚀 Enterprise-grade MERN + Machine Learning platform for intelligent crop recommendation, disease detection, yield prediction, and AI-powered agricultural decision support.
 
 ---
 
@@ -10,44 +10,19 @@ The **Enterprise AI Crop Intelligence Platform** is a full-stack, AI-powered agr
 
 ---
 
+## 🚀 Live Demo
+
+**Frontend:** https://enterprise-ai-crop-intelligence-pla.vercel.app
+
+**Backend API:** https://enterprise-ai-crop-backend.onrender.com
+
+---
+
 ## 🏗️ Platform Architecture
 
-```mermaid
-graph TD
-  subgraph Client Console (React + Vite + TailwindCSS)
-    UI["Dashboard & User Consoles"]
-    AI["Groq AI Copilot (/assistant)"]
-    Admin["MLOps Operations & Observability"]
-  end
-
-  subgraph Express API Layer
-    Auth["JWT Auth & Rate Limiter"]
-    PredictCtrl["Crop Prediction Engine"]
-    DiseaseCtrl["ResNet50 Pathology Engine"]
-    YieldCtrl["ML Yield Estimator"]
-    GroqSvc["Groq LLM Service (llama-3.3-70b)"]
-    ObsSvc["Centralized Observability Layer"]
-  end
-
-  subgraph Persistence & External Integrations
-    Mongo[("MongoDB Database")]
-    Weather["Open-Meteo & OpenWeather APIs"]
-    Models["Active Model Serving Layer (v1.1)"]
-  end
-
-  UI --> Auth
-  Auth --> PredictCtrl
-  Auth --> DiseaseCtrl
-  Auth --> YieldCtrl
-  AI --> GroqSvc
-  Admin --> ObsSvc
-  PredictCtrl --> Models
-  DiseaseCtrl --> Models
-  PredictCtrl --> Mongo
-  YieldCtrl --> Mongo
-  ObsSvc --> Mongo
-  GroqSvc --> Weather
-```
+<p align="center">
+  <img src="architecture-diagram.png" alt="Architecture" width="100%">
+</p>
 
 ---
 
@@ -252,3 +227,15 @@ npm run build
 
 - **Status**: Release Candidate v1.0 (Production Ready)
 - **License**: MIT Enterprise Agriculture License
+
+---
+
+## 🌐 Deployment
+
+| Service | Platform |
+|---------|----------|
+| Frontend | Vercel |
+| Backend | Render |
+| Database | MongoDB Atlas |
+| Image Storage | Cloudinary |
+| ML Engine | Python + Scikit-learn + TensorFlow |
