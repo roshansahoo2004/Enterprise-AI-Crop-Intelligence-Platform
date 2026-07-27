@@ -1,6 +1,6 @@
 # 🌾 Enterprise AI Crop Intelligence Platform
 
-> **Release Candidate v1.0** — > 🚀 Enterprise-grade MERN + Machine Learning platform for intelligent crop recommendation, disease detection, yield prediction, and AI-powered agricultural decision support.
+> **Release Candidate v1.0** — 🚀 Enterprise-grade MERN + Machine Learning platform for intelligent crop recommendation, disease detection, yield prediction, and AI-powered agricultural decision support.
 
 ---
 
@@ -10,11 +10,28 @@ The **Enterprise AI Crop Intelligence Platform** is a full-stack, AI-powered agr
 
 ---
 
+## 📚 Table of Contents
+
+- Overview
+- Live Demo
+- Platform Architecture
+- Key Features
+- Technology Stack
+- Application Screenshots
+- Project Structure
+- Installation
+- API Documentation
+- Security
+- Deployment
+- License
+
+---
+
 ## 🚀 Live Demo
 
-**Frontend:** https://enterprise-ai-crop-intelligence-pla.vercel.app
+[![Live Demo](https://img.shields.io/badge/Live-Demo-success?style=for-the-badge)](https://enterprise-ai-crop-intelligence-pla.vercel.app)
 
-**Backend API:** https://enterprise-ai-crop-backend.onrender.com
+[![Backend API](https://img.shields.io/badge/API-Render-blue?style=for-the-badge)](https://enterprise-ai-crop-backend.onrender.com)
 
 ---
 
@@ -28,26 +45,35 @@ The **Enterprise AI Crop Intelligence Platform** is a full-stack, AI-powered agr
 
 ## ⭐ Key Features
 
-1. **Precision Crop Recommendation Engine**:
-   - Random Forest model evaluating soil Nitrogen, Phosphorus, Potassium, pH, rainfall, temperature, and humidity telemetry to recommend optimal crops with confidence scores.
+🌾 **AI Crop Recommendation**
+- Recommends the most suitable crop using a Random Forest model based on soil nutrients (NPK), temperature, humidity, pH, and rainfall with confidence scores.
 
-2. **ResNet50 / EfficientNet Leaf Disease Pathology Diagnostics**:
-   - Deep learning computer vision image diagnostic pipeline predicting disease pathology, severity levels, treatment protocols, and isolation steps.
+🍃 **AI Plant Disease Detection**
+- Detects plant leaf diseases using EfficientNetB0 deep learning model with confidence score, severity analysis, treatment recommendations, and prevention tips.
 
-3. **AI Yield & Revenue Estimator**:
-   - Tonnage estimation (tons/ha), gross revenue ($), and net profit margin projections based on soil telemetry and field dimensions.
+📈 **AI Yield Prediction**
+- Predicts expected crop yield and estimated revenue using machine learning models and environmental parameters.
 
-4. **Groq Llama-3.3 Conversational AI Copilot**:
-   - Context-aware agronomist copilot integrating live weather, soil health index, disease history, yield estimates, and persistent session memory. Includes 1-click **Generate AI Farm Report (PDF)** export.
+🤖 **AI Farming Assistant**
+- Powered by Groq Llama 3.3 to answer farming queries, provide agricultural guidance, and generate AI-powered farm reports.
 
-5. **Disease Intelligence Outbreak Heatmap**:
-   - Interactive regional epidemic surveillance mapping active outbreaks, risk levels (`Critical`, `High`, `Medium`, `Low`), and 4-week surge trends across major agricultural zones.
+🗺️ **Disease Heatmap**
+- Visualizes regional disease outbreaks with risk levels and trend analysis to support better farming decisions.
 
-6. **Smart Crop Lifecycle Calendar**:
-   - Automated 6-stage crop growth timeline with weather-aware irrigation alerts and N-P-K fertilizer top-dressing directives.
+📅 **Smart Crop Calendar**
+- Provides crop lifecycle stages, irrigation schedules, fertilizer recommendations, and farming reminders.
 
-7. **Enterprise MLOps & System Observability Center**:
-   - Datadog/Grafana-style observability console tracking API latency timeseries, memory heap usage, database document counts, model drift (Data, Feature, Confidence), automated retraining pipelines, and governance compliance.
+📊 **Analytics Dashboard**
+- Displays prediction history, crop statistics, disease trends, AI insights, and system performance through interactive charts.
+
+🔐 **Secure Authentication**
+- JWT-based user authentication with encrypted passwords, protected routes, and role-based access control.
+
+☁️ **Cloud Image Storage**
+- Stores uploaded crop images securely using Cloudinary with prediction history maintained in MongoDB Atlas.
+
+📱 **Responsive User Interface**
+- Fully responsive design optimized for desktop, tablet, and mobile devices using React, Tailwind CSS, and Framer Motion.
 
 ---
 
@@ -60,6 +86,8 @@ The **Enterprise AI Crop Intelligence Platform** is a full-stack, AI-powered agr
 | **Database** | MongoDB (Mongoose ODM) |
 | **AI / ML Models** | Random Forest (Crop Rec), ResNet50 / EfficientNet (Disease Detection), Groq LLM (llama-3.3-70b) |
 | **Telemetry APIs** | Open-Meteo Weather API, OSM Nominatim Reverse Geocoding |
+| **Cloud Services** | Cloudinary, MongoDB Atlas |
+| **Libraries** | Axios, React Hook Form, Recharts, Framer Motion |
 
 ---
 
@@ -68,7 +96,7 @@ The **Enterprise AI Crop Intelligence Platform** is a full-stack, AI-powered agr
 ## 🏠 Dashboard
 
 <p align="center">
-  <img src="assets/dashboard.png" width="1000"/>
+  <img src="assets/dashboard.png" width="100%"/>
 </p>
 
 ---
@@ -78,13 +106,13 @@ The **Enterprise AI Crop Intelligence Platform** is a full-stack, AI-powered agr
 ### Input Form
 
 <p align="center">
-  <img src="assets/crop-prediction-form.png" width="1000"/>
+  <img src="assets/crop-prediction-form.png" width="100%"/>
 </p>
 
 ### Prediction Result
 
 <p align="center">
-  <img src="assets/crop-prediction-result.png" width="1000"/>
+  <img src="assets/crop-prediction-result.png" width="100%"/>
 </p>
 
 ---
@@ -92,7 +120,7 @@ The **Enterprise AI Crop Intelligence Platform** is a full-stack, AI-powered agr
 ## 🍃 Disease Detection
 
 <p align="center">
-  <img src="assets/disease-detection.png" width="1000"/>
+  <img src="assets/disease-detection.png" width="100%"/>
 </p>
 
 ---
@@ -100,7 +128,7 @@ The **Enterprise AI Crop Intelligence Platform** is a full-stack, AI-powered agr
 ## 📈 AI Yield Prediction
 
 <p align="center">
-  <img src="assets/yield-prediction.png" width="1000"/>
+  <img src="assets/yield-prediction.png" width="100%"/>
 </p>
 
 ---
@@ -108,7 +136,7 @@ The **Enterprise AI Crop Intelligence Platform** is a full-stack, AI-powered agr
 ## 📊 Analytics Dashboard
 
 <p align="center">
-  <img src="assets/analytics.png" width="1000"/>
+  <img src="assets/analytics.png" width="100%"/>
 </p>
 
 ---
@@ -116,7 +144,7 @@ The **Enterprise AI Crop Intelligence Platform** is a full-stack, AI-powered agr
 ## 🤖 AI Assistant
 
 <p align="center">
-  <img src="assets/ai-assistant.png" width="1000"/>
+  <img src="assets/ai-assistant.png" width="100%"/>
 </p>
 
 ---
@@ -124,7 +152,7 @@ The **Enterprise AI Crop Intelligence Platform** is a full-stack, AI-powered agr
 ## 📜 Prediction History
 
 <p align="center">
-  <img src="assets/prediction-history.png" width="1000"/>
+  <img src="assets/prediction-history.png" width="100%"/>
 </p>
 
 ---
@@ -132,7 +160,7 @@ The **Enterprise AI Crop Intelligence Platform** is a full-stack, AI-powered agr
 ## 📱 Mobile Responsive UI
 
 <p align="center">
-  <img src="assets/mobile-ui.png" width="350"/>
+  <img src="assets/mobile-ui.png" width="35%"/>
 </p>
 
 ---
@@ -239,3 +267,14 @@ npm run build
 | Database | MongoDB Atlas |
 | Image Storage | Cloudinary |
 | ML Engine | Python + Scikit-learn + TensorFlow |
+
+---
+
+## 👨‍💻 Author
+
+**Roshan Sahoo**
+
+AI & ML | Full Stack Developer
+
+- GitHub: https://github.com/roshansahoo2004
+- LinkedIn: https://www.linkedin.com/in/roshansahoo/ 
